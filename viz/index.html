@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Churn Prevention Dashboard - Visualization Index</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .viz-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .viz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .viz-card h3 {
+            margin: 0 0 10px 0;
+            color: #1e293b;
+        }
+        .viz-card p {
+            color: #64748b;
+            margin: 0 0 15px 0;
+            font-size: 14px;
+        }
+        .viz-card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .viz-card a:hover {
+            opacity: 0.9;
+        }
+        .timestamp {
+            text-align: center;
+            color: #64748b;
+            margin-top: 40px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Churn Prevention Dashboard</h1>
+        <p class="subtitle">AI-Powered Customer Retention System - Visualization Gallery</p>
+
+        <div class="viz-grid">
+            <div class="viz-card">
+                <h3>📊 Key Metrics</h3>
+                <p>Overview cards showing customers at risk, CLV at risk, churn rate, and A/B test results.</p>
+                <a href="01_key_metrics.html">View →</a>
+            </div>
+
+            <div class="viz-card">
+                <h3>📈 Executive Dashboard</h3>
+                <p>Interactive Plotly dashboard with risk distribution, CLV analysis, A/B test results, and ROI metrics.</p>
+                <a href="02_executive_dashboard.html">View →</a>
+            </div>
+
+            <div class="viz-card">
+                <h3>🖼️ Dashboard Image</h3>
+                <p>Static PNG export of the executive dashboard for presentations and reports.</p>
+                <a href="02_executive_dashboard.png">View →</a>
+            </div>
+        </div>
+
+        <p class="timestamp">Generated: December 02, 2025 at 01:51 PM</p>
+    </div>
+</body>
+</html>
