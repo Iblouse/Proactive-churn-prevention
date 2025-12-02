@@ -12,3 +12,4 @@ pydantic>=2.0
 nest_asyncio
 kaleido==0.2.1
 plotly>=6.1.1
+nbformat>=4.2.0
