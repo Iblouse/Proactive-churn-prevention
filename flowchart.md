@@ -3,112 +3,145 @@
   'theme': 'base',
   'themeVariables': {
     'primaryColor': '#ffffff',
-    'primaryTextColor': '#0f172a',
-    'primaryBorderColor': '#94a3b8',
-    'lineColor': '#64748b',
-    'fontFamily': 'Arial, sans-serif',
-    'fontSize': '14px'
-  },
-  'flowchart': {
-    'curve': 'basis',
-    'padding': 20
+    'primaryTextColor': '#1f2937',
+    'primaryBorderColor': '#1f2937',
+    'lineColor': '#4b5563',
+    'fontSize': '14px',
+    'fontFamily': 'Helvetica, Arial, sans-serif'
   }
 }}%%
 
 flowchart TD
-    %% Global Styling Classes
-    classDef default fill:#ffffff,stroke:#94a3b8,stroke-width:1px,rx:8,ry:8,color:#0f172a,shadow:false;
-    classDef decision fill:#f8fafc,stroke:#64748b,stroke-width:1px,rx:5,ry:5,shape:rhombus;
-    classDef endpoint fill:#f1f5f9,stroke:#334155,stroke-width:2px,rx:5,ry:5;
-    classDef critical fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b;
-    classDef high fill:#ffedd5,stroke:#f97316,stroke-width:2px,color:#9a3412;
-    classDef medium fill:#fef9c3,stroke:#eab308,stroke-width:2px,color:#854d0e;
-    classDef low fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534;
-    classDef deploy fill:#10b981,stroke:#047857,stroke-width:2px,color:#ffffff;
-    classDef refine fill:#ef4444,stroke:#991b1b,stroke-width:2px,color:#ffffff;
+    %% --- GLOBAL STYLING ---
+    classDef default fill:#fff,stroke:#374151,stroke-width:1px,rx:5,ry:5,color:#1f2937;
+    classDef inputNode fill:#f3f4f6,stroke:#374151,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef agentNode fill:#fff,stroke:#2563eb,stroke-width:2px;
+    classDef decisionNode fill:#fff,stroke:#374151,stroke-width:1px,shape:rhombus;
+    classDef criticalNode fill:#fee2e2,stroke:#ef4444,stroke-width:2px;
+    classDef highNode fill:#ffedd5,stroke:#f97316,stroke-width:2px;
+    classDef medNode fill:#fef08a,stroke:#eab308,stroke-width:2px;
+    classDef lowNode fill:#dcfce7,stroke:#22c55e,stroke-width:2px;
+    classDef successNode fill:#10b981,stroke:#047857,stroke-width:3px,color:#fff;
+    classDef failNode fill:#ef4444,stroke:#b91c1c,stroke-width:3px,color:#fff;
+    classDef dashboardNode fill:#f8fafc,stroke:#64748b,stroke-width:1px,shape:rect;
 
-    subgraph CONTAINER ["System Architecture: Churn Prediction & Intervention Pipeline"]
+    %% --- 1. DATA INGESTION ---
+    subgraph INPUT ["📂 STEP 1: DATA INGESTION"]
         direction TB
-
-        subgraph INPUT ["📥 DATA INGESTION"]
-            direction TB
-            A(["Customer Data<br/>Dataset: n=3,000"]) --> B[Feature Engineering]
-            B --> C[Risk Signal Extraction]
-        end
-
-        subgraph BEHAVIORAL ["🔍 BEHAVIORAL AGENT"]
-            direction TB
-            C --> D{"Engagement<br/>Drop?"}
-            D -->|Yes| E[🚩 Flag Pattern]
-            D -->|No| F[Continue Monitoring]
-            F -.-> C
-        end
-
-        subgraph PREDICTIVE ["📊 PREDICTIVE AGENT"]
-            direction TB
-            E --> G[Calculate Churn<br/>Probability Model]
-            G --> H{"Risk Level Assessment"}
-            H -->|≥75%| I[Critical Risk]
-            H -->|50-74%| J[High Risk]
-            H -->|25-49%| K[Medium Risk]
-            H -->|<25%| L[Low Risk]
-        end
-
-        subgraph INTERVENTION ["💡 INTERVENTION AGENT"]
-            direction TB
-            I --> M[Personal Call]
-            J --> N[Discount Offer]
-            K --> O[Email Campaign]
-            L --> P[Automated Nurture]
-            
-            %% Fixed syntax here by adding quotes around label with parentheses
-            M & N & O --> Q{"Within Window?<br/>(Days 15-45)"}
-            Q -->|Yes| R[🚀 Execute Intervention]
-            Q -->|No| S["🕒 Schedule for<br/>Optimal Window"]
-            S --> R
-        end
-
-        subgraph EVALUATION ["📈 EVALUATION AGENT"]
-            direction TB
-            R --> T["Track Outcome<br/>(60-day Window)"]
-            T --> U{"User Churned?"}
-            U -->|No| V[✅ Success]
-            U -->|Yes| W[❌ Model Refinement]
-            V & W --> X[Update A/B Results]
-            X -. Feedback Loop .-> G
-        end
-
-        subgraph OUTPUT ["📋 REPORTING & DECISION"]
-            direction TB
-            X --> Z[Executive Dashboard]
-            Z --> AA[Risk Distribution]
-            Z --> AB[Intervention ROI]
-            Z --> AC[A/B Test Results]
-            
-            AA & AB & AC --> AD{"Stakeholder<br/>Approval?"}
-            AD -->|Yes| AE([🚀 DEPLOY TO<br/>PRODUCTION])
-            AD -->|No| AF([Review & Iterate])
-            AF -.-> A
-        end
+        A[/"📥 Customer Data Input<br/>(n=3,000)"/]:::inputNode
+        B["⚙️ Feature Engineering"]
+        C["📡 Risk Signal Detection"]
+        
+        A --> B --> C
     end
 
-    %% Apply Classes
-    class D,H,Q,U,AD decision;
-    class I critical;
-    class J high;
-    class K medium;
-    class L low;
-    class AE deploy;
-    class AF,W refine;
-    class A,AE,AF endpoint;
+    %% --- 2. BEHAVIORAL ANALYSIS ---
+    subgraph BEHAVIORAL ["🔍 STEP 2: BEHAVIORAL AGENT"]
+        direction TB
+        D{"Engagement<br/>Drop Detected?"}:::decisionNode
+        E["🚩 Flag Pattern"]:::agentNode
+        F["👁️ Continue Monitoring"]
+        
+        C --> D
+        D -->|Yes| E
+        D -->|No| F
+        F -.-> C
+    end
 
-    %% Subgraph Styling for Clean White Look
-    style CONTAINER fill:#ffffff,stroke:#e2e8f0,stroke-width:2px,rx:10,ry:10
-    style INPUT fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
-    style BEHAVIORAL fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
-    style PREDICTIVE fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
-    style INTERVENTION fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
-    style EVALUATION fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
-    style OUTPUT fill:#ffffff,stroke:#cbd5e1,stroke-width:1px,stroke-dasharray: 5 5
+    %% --- 3. PREDICTIVE MODELING ---
+    subgraph PREDICTIVE ["📊 STEP 3: PREDICTIVE AGENT"]
+        direction TB
+        G["🧮 Calculate Churn Probability"]:::agentNode
+        H{"Assess Risk Level"}:::decisionNode
+        
+        I["🔴 Critical (≥75%)"]:::criticalNode
+        J["🟠 High (50-74%)"]:::highNode
+        K["🟡 Medium (25-49%)"]:::medNode
+        L["🟢 Low (<25%)"]:::lowNode
 
+        E --> G --> H
+        H --> I
+        H --> J
+        H --> K
+        H --> L
+    end
+
+    %% --- 4. INTERVENTION STRATEGY ---
+    subgraph INTERVENTION ["💡 STEP 4: INTERVENTION AGENT"]
+        direction TB
+        M["📞 Personal Call"]
+        N["🏷️ Discount Offer"]
+        O["📧 Email Campaign"]
+        P["🤖 Automated Nurture"]
+        
+        Q{"Optimal Window?<br/>(Days 15-45)"}:::decisionNode
+        R["🚀 Execute Intervention"]:::agentNode
+        S["📅 Schedule for Window"]
+        
+        I --> M
+        J --> N
+        K --> O
+        L --> P
+
+        M & N & O --> Q
+        P --> R
+        
+        Q -->|Yes| R
+        Q -->|No| S
+        S -.-> R
+    end
+
+    %% --- 5. EVALUATION LOOP ---
+    subgraph EVALUATION ["📈 STEP 5: EVALUATION AGENT"]
+        direction TB
+        T["⏱️ Track Outcome (60 Days)"]
+        U{"Did Customer<br/>Churn?"}:::decisionNode
+        V["✅ Retention Success"]:::successNode
+        W["❌ Refine Model Weights"]:::failNode
+        X["📝 Update A/B Records"]
+        Y["🔄 Feedback Loop"]
+        
+        R --> T --> U
+        U -->|No| V
+        U -->|Yes| W
+        V & W --> X --> Y
+        Y -.-> G
+    end
+
+    %% --- 6. OUTPUT & DASHBOARD ---
+    subgraph OUTPUT ["📋 STEP 6: EXECUTIVE OUTPUT"]
+        direction TB
+        Z{{"🖥️ Executive Dashboard"}}:::dashboardNode
+        AA["📊 Risk Distribution"]
+        AB["💰 Intervention ROI"]
+        AC["🧪 A/B Test Results"]
+        
+        X --> Z
+        Z --> AA & AB & AC
+    end
+
+    %% --- 7. FINAL DECISION ---
+    subgraph DECISION ["🏁 FINAL APPROVAL"]
+        direction TB
+        AD{"Stakeholder<br/>Approval?"}:::decisionNode
+        AE([🚀 DEPLOY TO PRODUCTION]):::successNode
+        AF([Review & Iterate]):::failNode
+
+        AA & AB & AC --> AD
+        AD -->|Yes| AE
+        AD -->|No| AF
+        AF -.-> A
+    end
+
+    %% --- STYLING SUBGRAPHS ---
+    style INPUT fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style BEHAVIORAL fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style PREDICTIVE fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style INTERVENTION fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style EVALUATION fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style OUTPUT fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+    style DECISION fill:#fff,stroke:#9ca3af,stroke-width:1px,stroke-dasharray: 5 5
+
+    %% --- LINK STYLING ---
+    linkStyle default stroke:#64748b,stroke-width:2px,fill:none
 ```
