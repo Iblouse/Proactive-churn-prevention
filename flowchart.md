@@ -1,9 +1,9 @@
 ```mermaid
 %%{init: {
   "theme": "base",
-  "flowchart": { "curve": "basis", "nodeSpacing": 50, "rankSpacing": 65, "padding": 14 },
+  "flowchart": { "curve": "basis", "nodeSpacing": 52, "rankSpacing": 70, "padding": 14 },
   "themeVariables": {
-    "background": "transparent",
+    "background": "#ffffff",
     "fontFamily": "Inter, Arial, sans-serif",
     "fontSize": "16px",
     "lineColor": "#1f2937",
@@ -12,12 +12,12 @@
     "primaryTextColor": "#0f172a",
     "primaryBorderColor": "#cbd5e1",
     "clusterBkg": "transparent",
-    "clusterBorder": "#cbd5e1"
+    "clusterBorder": "transparent"
   }
 }}%%
 flowchart TB
 
-  subgraph FRAME["Proactive Churn Prevention System"]
+  subgraph FRAME[" "]
     direction TB
 
     subgraph INPUT["📥 DATA INPUT"]
@@ -31,7 +31,6 @@ flowchart TB
       C --> D{"Engagement<br/>Drop?"}
       D -->|Yes| E["Flag Pattern"]
       D -->|No| F["Monitor"]
-      F -.-> C
     end
 
     subgraph PREDICTIVE["📊 PREDICTIVE AGENT"]
@@ -69,13 +68,12 @@ flowchart TB
       U -->|Yes| W["❌ Refine Model"]
       V --> X["Update A/B Results"]
       W --> X
-      X --> Y["Feedback Loop<br/>to Predictive Agent"]
-      Y --> G
+      X --> Y["Log Learnings<br/>& Update Model Plan"]
     end
 
     subgraph OUTPUT["📋 OUTPUT"]
       direction TB
-      X --> Z["Executive Dashboard"]
+      Y --> Z["Executive Dashboard"]
       Z --> AA["Risk Distribution"]
       Z --> AB["Intervention ROI"]
       Z --> AC["A/B Test Results"]
@@ -88,7 +86,6 @@ flowchart TB
       AC --> AD
       AD -->|Yes| AE["🚀 Deploy to<br/>Production"]
       AD -->|No| AF["Review & Iterate"]
-      AF -.-> A
     end
   end
 
@@ -111,15 +108,17 @@ flowchart TB
   class K riskMed;
   class L riskLow;
 
-  %% Subgraph styling (continuous outer rectangle + transparent inner panels)
-  style FRAME fill:#ffffff,stroke:#cbd5e1,stroke-width:2px,color:#0f172a
-  style INPUT fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style BEHAVIORAL fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style PREDICTIVE fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style INTERVENTION fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style EVALUATION fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style OUTPUT fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
-  style DECISION fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#0f172a
+  %% Single continuous outer rectangle
+  style FRAME fill:#ffffff,stroke:#94a3b8,stroke-width:2px,color:#0f172a
+
+  %% Hide inner subgraph borders so the frame reads as one continuous rectangle
+  style INPUT fill:transparent,stroke:transparent,color:#0f172a
+  style BEHAVIORAL fill:transparent,stroke:transparent,color:#0f172a
+  style PREDICTIVE fill:transparent,stroke:transparent,color:#0f172a
+  style INTERVENTION fill:transparent,stroke:transparent,color:#0f172a
+  style EVALUATION fill:transparent,stroke:transparent,color:#0f172a
+  style OUTPUT fill:transparent,stroke:transparent,color:#0f172a
+  style DECISION fill:transparent,stroke:transparent,color:#0f172a
 
   linkStyle default stroke:#1f2937,stroke-width:2px
 
