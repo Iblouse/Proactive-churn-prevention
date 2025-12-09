@@ -16,7 +16,7 @@ An end-to-end machine learning system that predicts customer churn 45-60 days in
 | Metric | Value | Description |
 |--------|-------|-------------|
 | **Model AUC** | 87% | Predictive accuracy on holdout set |
-| **Churn Reduction** | 39% | A/B test validated improvement |
+| **Churn Reduction** | 44% | A/B test validated improvement |
 | **Early Warning** | 45 days | Average prediction lead time |
 | **Optimal Window** | Days 15-45 | Peak intervention success rate (95%) |
 | **ROI** | 9.2x | Return on retention investment |
@@ -33,6 +33,34 @@ Customer churn costs businesses **$1.6 trillion annually** in the US alone. Trad
 - **Recommend** personalized retention strategies
 - **Validate** effectiveness through rigorous A/B testing
 - **Measure** ROI with executive-ready dashboards
+
+---
+
+## 🔄 How It Works: Execution Overview
+
+### High-Level Flow
+
+```
+Customer Data → Behavioral Analysis → Risk Prediction → Intervention Selection → Execution → Evaluation → Dashboard → Approval → Deploy/Iterate
+```
+
+### The Logic in 7 Steps
+
+| Step | What Happens | Key Logic |
+|------|--------------|-----------|
+| **1. Data Input** | Ingest customer data (n=3,000 training, n=2,000 A/B test) | Segment by tier (Enterprise → Basic) based on CLV |
+| **2. Behavioral Monitoring** | Detect engagement drops, payment issues, support spikes | Flag customers showing risk patterns |
+| **3. Risk Prediction** | Calculate churn probability using weighted features | Classify: 🔴 Critical (≥75%), 🟠 High (50-74%), 🟡 Medium (25-49%), 🟢 Low (<25%) |
+| **4. Intervention Selection** | Match strategy to risk level and customer value | Critical → Call, High → Combined, Medium → Discount, Low → Email |
+| **5. Timing Check** | Verify customer is in optimal window (Days 15-45) | Too early = low receptivity, Too late = already decided |
+| **6. Execution & Evaluation** | Execute intervention, track 60-day outcome | A/B test with 5 variants, chi-square significance testing |
+| **7. Dashboard & Decision** | Present results to leadership | Approved → Deploy, Not approved → Iterate back to Step 1 |
+
+### Why This Works
+
+- **Timing > Prediction**: Day 30 intervention (95% success) beats Day 1 (25% success) — 3.8x impact difference
+- **Right Action, Right Customer**: Personal calls for high-value critical risk; automation for low-risk segments
+- **Validated, Not Assumed**: 44% churn reduction proven through A/B testing, not just model metrics
 
 ---
 
@@ -64,6 +92,86 @@ Customer churn costs businesses **$1.6 trillion annually** in the US alone. Trad
 | **Intervention Agent** | Recommends personalized retention actions | Sequential |
 | **Evaluation Agent** | Measures intervention effectiveness | Loop |
 
+### System Workflow Flowchart
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'arial', 'lineColor': '#333', 'primaryColor': '#fff', 'primaryTextColor': '#000', 'primaryBorderColor': '#333', 'lineWidth': '3px'}}}%%
+flowchart TD
+    subgraph INPUT["📥 DATA INPUT"]
+        A[Customer Data<br/>n=3,000] --> B[Feature Engineering]
+        B --> C[Risk Signals]
+    end
+
+    subgraph BEHAVIORAL["🔍 BEHAVIORAL AGENT"]
+        C --> D{Engagement<br/>Drop?}
+        D -->|Yes| E[Flag Pattern]
+        D -->|No| F[Monitor]
+        F --> C
+    end
+
+    subgraph PREDICTIVE["📊 PREDICTIVE AGENT"]
+        E --> G[Calculate Churn<br/>Probability]
+        G --> H{Risk Level?}
+        H -->|≥75%| I[🔴 Critical]
+        H -->|50-74%| J[🟠 High]
+        H -->|25-49%| K[🟡 Medium]
+        H -->|<25%| L[🟢 Low]
+    end
+
+    subgraph INTERVENTION["💡 INTERVENTION AGENT"]
+        I --> M[Call]
+        J --> N[Combined]
+        K --> O[Discount]
+        L --> P[Email]
+        
+        M --> Q{Within Optimal<br/>Window?<br/>Days 15-45}
+        N --> Q
+        O --> Q
+        Q -->|Yes| R[Execute Intervention]
+        Q -->|No| S[Schedule for<br/>Optimal Window]
+        S --> R
+    end
+
+    subgraph EVALUATION["📈 EVALUATION AGENT"]
+        R --> T[Track Outcome<br/>60-day window]
+        T --> U{Churned?}
+        U -->|No| V[✅ Success]
+        U -->|Yes| W[❌ Refine Model]
+        V --> X[Update A/B Results]
+        W --> X
+        X --> Y[Feed Back to<br/>Predictive Agent]
+        Y --> G
+    end
+
+    subgraph OUTPUT["📋 OUTPUT"]
+        X --> Z[Executive Dashboard]
+        Z --> AA[Risk Distribution]
+        Z --> AB[Intervention ROI]
+        Z --> AC[A/B Test Results]
+    end
+
+    subgraph DECISION["✅ APPROVAL"]
+        AA --> AD{Approved by<br/>Leadership &<br/>Stakeholders?}
+        AB --> AD
+        AC --> AD
+        AD -->|Yes| AE[🚀 DEPLOY TO<br/>PRODUCTION]
+        AD -->|No| AF[Review & Iterate]
+        AF --> A
+    end
+
+    style INPUT fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style BEHAVIORAL fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style PREDICTIVE fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style INTERVENTION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style EVALUATION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style OUTPUT fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style DECISION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style AE fill:#d1fae5,stroke:#059669,stroke-width:3px,color:#000
+    style AF fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#000
+
+    linkStyle default stroke:#333,stroke-width:3px
+```
+
 ---
 
 ## ✨ Features
@@ -92,12 +200,11 @@ Interactive 2×3 grid dashboard with:
 |-------|-------------------|----------------------------|------------------|
 | **Row 2** | **CLV at Risk by Tier** | **Intervention ROI** | **Multi-Variant Analysis** |
 
-### 🎯 Intervention Strategies
-- **Payment Resolution**: Address billing issues (8.2x ROI)
-- **Account Manager**: High-touch for enterprise (4.5x ROI)
-- **Re-engagement Campaign**: Automated nurture (12.1x ROI)
-- **Proactive Outreach**: Personal check-ins (6.8x ROI)
-- **Feature Adoption**: Product education (9.4x ROI)
+### 🎯 Intervention Strategies (Aligned with A/B Test Variants)
+- **Email**: Automated re-engagement campaign (12.1x ROI)
+- **Discount**: Incentive-based retention offer (9.4x ROI)
+- **Combined**: Escalating approach - Email → Discount → Call (8.2x ROI)
+- **Call**: Personal CSM outreach (4.5x ROI)
 
 ---
 
