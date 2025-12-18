@@ -36,7 +36,7 @@
         D2 -- No --> P8
 
         %% --- Phase 5 & 6: Evaluation (Red) ---
-        P8[Track Outcomes<br/>60-Day Window] --> D4{Customer<br/>Churned?}
+        P8[Track Outcomes<br/>120-Day Window] --> D4{Customer<br/>Churned?}
         D4 -- No --> R1[Record SUCCESS<br/>& Calc ROI]
         D4 -- Yes --> R2[Record FAILURE<br/>& Flag]
         
