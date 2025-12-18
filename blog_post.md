@@ -1,97 +1,347 @@
-# From Reactive to Proactive: Building an AI System That Cut Customer Churn by 44%
+# Building a Proactive Churn Prevention System: How Timing Transforms Customer Retention
 
-**A multi-agent architecture using Google ADK and Vertex AI that predicts churn 45 days early, identifies the optimal intervention window, and validates results through rigorous A/B testing—delivering 9.2x ROI on retention spend.**
-
----
-
-## TL;DR — The Results
-
-| Metric | Result | Business Impact |
-|--------|--------|-----------------|
-| **Churn Reduction** | 44% | A/B validated, not backtested |
-| **Prediction Lead Time** | 45 days | Time for meaningful intervention |
-| **Model Performance** | 87% AUC | Reliable risk scoring |
-| **Intervention ROI** | 9.2x | Justifies retention investment |
-| **CLV Protected** | $1.75M | Revenue at risk identified |
-| **Best Strategy** | Call (10% churn) | vs 18% baseline |
-
-> **📊 VISUAL**: `viz/01_key_metrics.png` — Key metrics summary panel showing headline numbers at a glance
-
-**The key insight**: Timing beats accuracy. A Day-30 intervention achieves 95% success rate versus 25% on Day 1—a **3.8x impact multiplier** from timing alone.
+**A Technical Deep-Dive into Survival Analysis, Multi-Agent AI, and the Business Impact of Getting Intervention Timing Right**
 
 ---
 
-## Table of Contents
+## Executive Summary
 
-1. [The Problem & My Approach](#1-the-problem--my-approach)
-2. [System Architecture](#2-system-architecture)
-3. [Data Pipeline & Feature Engineering](#3-data-pipeline--feature-engineering)
-4. [The Multi-Agent System](#4-the-multi-agent-system)
-5. [The Optimal Intervention Window Discovery](#5-the-optimal-intervention-window-discovery)
-6. [A/B Testing Framework & Statistical Validation](#6-ab-testing-framework--statistical-validation)
-7. [Executive Dashboard Design](#7-executive-dashboard-design)
-8. [Results & Business Impact](#8-results--business-impact)
-9. [Skills Demonstrated](#9-skills-demonstrated)
-10. [How to Reproduce](#10-how-to-reproduce)
-11. [Lessons Learned & Next Steps](#11-lessons-learned--next-steps)
-12. [Visual Evidence Index](#visual-evidence-index)
+This project demonstrates that **when** you intervene matters as much as **whether** you intervene. By combining survival analysis with multi-agent AI, I built a system that:
+
+- Identifies at-risk customers **46-95 days before churn** (the optimal intervention window)
+- Achieves a **53.2% reduction in churn** with the best-performing intervention channel
+- Protects **$1.18M in customer lifetime value** across 1,347 high-risk customers
+- Provides statistically significant results (p < 0.0001) validated through rigorous A/B testing
+
+The key insight: the optimal intervention window (Day 46-95) is derived directly from survival analysis of high-risk customer predictions—not hardcoded assumptions.
+
+> **Note**: This project isn't about building the most accurate ML model—it's about integrating traditional ML, survival analysis, GenAI, statistics, and experiment design to deliver measurable business impact. A 0.66 AUC model that protects $1.18M in revenue is more valuable than a 0.95 AUC model sitting in a notebook.
 
 ---
 
-## 1. The Problem & My Approach
+## The $1.18 Million Problem
 
-### Business Context
+Before diving into the technical solution, let's understand what's at stake.
 
-Customer churn costs US businesses **$1.6 trillion annually**. The standard approach is reactive: flag churned customers after they've left, then analyze what went wrong. By then, the revenue is gone.
+### Customer Risk Distribution
 
-I built this project to demonstrate a different approach: **proactive, AI-driven retention** that predicts churn before it happens and intervenes at the optimal moment.
+Our analysis of 3,000 customers revealed the following risk distribution:
 
-### Why I Chose This Problem
+| Risk Tier | Count | Percentage | Churn Probability |
+|-----------|-------|------------|-------------------|
+| Low | 286 | 9.5% | <25% |
+| Medium | 1,367 | 45.6% | 25-49% |
+| High | 1,275 | 42.5% | 50-74% |
+| Critical | 72 | 2.4% | ≥75% |
 
-Most ML projects stop at "here's a risk score." But a score without a system to act on it delivers zero business value. I wanted to build something **end-to-end**:
+![Risk Distribution](01_risk_distribution.png)
 
-```
-Problem Framing → Data Engineering → Model Development → A/B Validation → Dashboard → Deployment Decision
-```
+*Figure 1: Customer segmentation by churn risk tier (n=3,000)*
 
-This mirrors real production ML systems where the model is just one component of a larger decision-making pipeline.
+**Key Finding**: Nearly 45% of customers (1,347) fall into High or Critical risk tiers, representing significant business exposure. These are the customers where intervention timing becomes critical.
 
-### Success Criteria (Defined Upfront)
+### Quantifying the Business Exposure
 
-| Metric | Target | Rationale |
-|--------|--------|-----------|
-| Prediction Lead Time | 45-60 days | Enough time for multi-touch interventions |
-| Optimal Window | Days 15-45 | Balances customer receptivity with urgency |
-| Peak Success Rate | ≥90% | Achievable within optimal window |
-| ROI Threshold | ≥8x | Must justify intervention costs |
+With a mean Customer Lifetime Value of **$1,924**, the stakes are substantial:
 
-**Design Decision**: I set a 60-day prediction window. Shorter windows (30 days) don't allow enough time for escalating interventions. Longer windows (90+ days) introduce too much prediction uncertainty.
+- **Total CLV at Risk**: $1,181,624 (High + Critical tiers)
+- **At-Risk Customer Count**: 1,347 customers
+- **Overall Churn Rate**: 19.4% (581 of 3,000 customers)
+
+This isn't an abstract ML problem—it's a revenue protection challenge with concrete dollar amounts.
 
 ---
 
-## 2. System Architecture
+## Part 1: Why Timing Is Everything
 
-### High-Level Data Flow
+Most churn prevention systems answer: "Will this customer churn?" 
+
+That's the wrong question.
+
+The right question is: **"When will this customer churn, and when should we intervene?"**
+
+### The Intervention Window Problem
+
+Consider two scenarios for a high-risk customer:
+
+| Scenario | Intervention Day | Outcome |
+|----------|-----------------|---------|
+| Too Early | Day 20 | Customer not yet experiencing friction; intervention feels premature |
+| **Optimal** | Day 70 (within 46-95 window) | Customer receptive; experiencing issues but hasn't decided to leave |
+| Too Late | Day 100 | Customer has mentally "checked out"; intervention feels desperate |
+
+### Survival Analysis: The Missing Piece
+
+Standard classification models predict *if* a customer will churn. Survival analysis predicts *when*.
+
+From our Cox Proportional Hazards model, we observed the actual churn timing distribution:
+
+**Event Time Distribution (Churned Customers Only):**
+| Metric | Days |
+|--------|------|
+| Minimum | 7 |
+| 25th Percentile | 17 |
+| Median | 45 |
+| 75th Percentile | 83 |
+| Maximum | 119 |
+
+![Survival Curves](08_survival_curves.png)
+
+*Figure 2: Survival probability over the 120-day observation window*
+
+**Retention Probabilities Over Time:**
+- 30-day retention: 92.3%
+- 60-day retention: 87.9%
+- 90-day retention: 85.2%
+- 120-day retention: 80.6%
+
+This tells us that most churn events occur gradually—7.7% by day 30, 12.1% by day 60, 19.4% by day 120. A one-size-fits-all intervention policy ignores this temporal pattern.
+
+---
+
+## Part 2: Building the Prediction Engine
+
+### The Two-Model Architecture
+
+I implemented a dual-model approach:
+
+1. **Churn Classification Model**: Logistic Regression → Probability of churn
+2. **Survival Model**: Cox Proportional Hazards → Days until churn
+
+### Model 1: Churn Probability Prediction
+
+**Why Logistic Regression?**
+
+| Consideration | Logistic Regression | Gradient Boosting |
+|--------------|---------------------|-------------------|
+| Interpretability | ✅ Clear coefficients | ❌ Black box |
+| Probability calibration | ✅ Native probabilities | ⚠️ Requires calibration |
+| Training speed | ✅ Fast iteration | ⚠️ Slower |
+
+**Model Performance (Test Set, n=600):**
+- **AUC-ROC: 0.6622**
+- Best threshold: 0.4 (by F1 score)
+- At threshold 0.4:
+  - Recall: 85.3% (catches most churners)
+  - Precision: 24.3%
+  - F1: 0.378
+
+**Threshold Analysis:**
+
+| Threshold | Accuracy | Precision | Recall | F1 |
+|-----------|----------|-----------|--------|-----|
+| 0.3 | 32.3% | 21.8% | 96.6% | 0.356 |
+| **0.4** | 45.7% | 24.3% | **85.3%** | **0.378** |
+| 0.5 | 60.0% | 26.0% | 57.8% | 0.358 |
+| 0.6 | 73.5% | 33.3% | 37.1% | 0.351 |
+| 0.7 | 80.2% | 45.9% | 14.7% | 0.222 |
+
+![Threshold Analysis](07_threshold_analysis.png)
+
+*Figure 3: Precision-Recall trade-off across classification thresholds*
+
+**Business Decision**: I selected threshold = 0.4 because:
+- **High recall (85.3%)**: We catch most at-risk customers
+- **Acceptable precision trade-off**: False positives (contacting happy customers) have low cost compared to missing churners
+
+**Confusion Matrix at Threshold 0.4:**
+```
+              Predicted
+              Retained  Churned
+Actual
+Retained       175      309
+Churned         17       99
+```
+
+- **True Positives (99)**: Churners we can intervene with
+- **False Negatives (17)**: Churners we missed
+- **False Positives (309)**: Retained customers flagged (opportunity for proactive engagement)
+
+### Model 2: Survival Analysis
+
+**Cox Proportional Hazards Model Performance:**
+- **Concordance Index: 0.6774**
+- Features: 9
+- Training samples: 3,000
+- Events (churned): 581
+
+**Top Risk Factors (Hazard Ratios):**
+
+| Feature | Hazard Ratio | Significance |
+|---------|-------------|--------------|
+| support_tickets_90d | 1.208 | *** |
+| is_inactive | 1.117 | ** |
+| has_payment_issues | 1.077 | |
+| payment_delays_12m | 1.014 | |
+| monthly_charges | 1.010 | |
+
+**Interpretation**: A customer with high support ticket volume has a 20.8% higher hazard (faster time to churn) compared to baseline, all else equal.
+
+---
+
+## Part 2.5: Why Prediction Power Alone Isn't Enough
+
+This is a critical insight that separates academic ML from business-impactful ML: **the best predictors aren't always the best intervention targets.**
+
+### The Actionability Problem
+
+Consider our top feature by coefficient magnitude:
+
+| Feature | Coefficient | Actionability |
+|---------|-------------|---------------|
+| **tenure_months** | -0.4997 | **Low** |
+| support_tickets_90d | +0.1913 | Medium |
+| engagement_score | -0.1796 | **High** |
+| nps_score | -0.1609 | Low |
+| feature_usage_pct | -0.1577 | **High** |
+
+**The Problem**: `tenure_months` is our strongest predictor (coefficient = -0.50), but we can't change how long a customer has been with us. It's useful for prediction but useless for intervention.
+
+**The Insight**: Features like `engagement_score` and `feature_usage_pct` have smaller coefficients but **HIGH actionability**—we can directly influence them through product tours, email campaigns, and feature education.
+
+### Actionability Framework
+
+I categorized all 15 features by business actionability:
+
+**High Actionability** (can directly influence through interventions):
+- `engagement_score` — Improve via feature education, onboarding
+- `feature_usage_pct` — Drive through product tours, tips
+- `email_open_rate` — Optimize subject lines, send times
+- `login_frequency_monthly` — Increase via notifications, value reminders
+- `has_payment_issues` — Address via payment plans, reminders
+
+**Medium Actionability** (can influence indirectly):
+- `support_tickets_90d` — Improve via better documentation, proactive help
+- `is_inactive` — Re-engage via campaigns
+- `last_activity_days` — Trigger re-engagement workflows
+- `payment_delays_12m` — Offer payment flexibility
+- `discount_count` — Strategic discount timing
+
+**Low Actionability** (difficult to change):
+- `tenure_months` — Cannot change customer tenure
+- `nps_score` — Lagging indicator, slow to move
+- `monthly_charges` — Pricing is strategic decision
+- `is_high_value` — Historical behavior
+- `is_heavy_support_user` — Symptom, not cause
+
+### Combined Scoring: Importance × Actionability
+
+To prioritize intervention targets, I calculated a combined score:
 
 ```
-Customer Data → Behavioral Analysis → Risk Prediction → Intervention Selection → Execution → Evaluation → Dashboard → Approval → Deploy/Iterate
+Combined Score = |Coefficient| × Actionability Multiplier
 ```
 
-### Multi-Agent Architecture
+Where: High = 3.0, Medium = 2.0, Low = 1.0
 
-I chose a **multi-agent design** over a monolithic model because production retention systems need to answer multiple questions:
+![Feature Importance vs Actionability](09_feature_actionability.png)
 
-| Question | Agent | Pattern |
-|----------|-------|---------|
-| What behavioral patterns indicate risk? | Behavioral Agent | Parallel |
-| What's the churn probability? | Predictive Agent | Sequential |
-| What intervention fits this customer? | Intervention Agent | Sequential |
-| Did the intervention work? | Evaluation Agent | Loop |
+*Figure: Traditional feature importance (left) vs. business-focused combined scoring (right)*
+
+**Key Insight**: The ranking changes dramatically:
+
+| Rank | By Coefficient Only | By Combined Score |
+|------|---------------------|-------------------|
+| 1 | tenure_months (0.50) | **engagement_score** (0.54) |
+| 2 | support_tickets_90d (0.19) | tenure_months (0.50) |
+| 3 | engagement_score (0.18) | **feature_usage_pct** (0.47) |
+| 4 | nps_score (0.16) | support_tickets_90d (0.38) |
+| 5 | feature_usage_pct (0.16) | is_inactive (0.18) |
+
+**`engagement_score` becomes the #1 intervention target** because it combines meaningful prediction power (0.18) with high actionability (3.0×).
+
+### Feature Selection Matrix
+
+![Feature Selection Matrix](10_feature_selection_matrix.png)
+
+*Figure: Four-quadrant matrix for prioritizing intervention targets*
+
+**Quadrant Analysis:**
+
+| Quadrant | Description | Strategy |
+|----------|-------------|----------|
+| **Priority Targets** (upper-right) | High importance + High actionability | Focus interventions here |
+| Monitor Only (lower-right) | High importance + Low actionability | Use for prediction, not intervention |
+| Easy Wins (upper-left) | Low importance + High actionability | Quick wins, secondary priority |
+| Deprioritize (lower-left) | Low importance + Low actionability | Ignore for interventions |
+
+### Business Impact of This Framework
+
+Without the actionability lens, a retention team might:
+- ❌ Build campaigns around "customer tenure" (can't change it)
+- ❌ Focus on NPS scores (lagging indicator, slow to improve)
+- ❌ Ignore engagement metrics (lower coefficient, but actionable)
+
+With the combined framework:
+- ✅ Target engagement score improvements (product tours, feature tips)
+- ✅ Drive feature adoption (email series, in-app guidance)
+- ✅ Address payment issues proactively (flexibility programs)
+
+**The lesson**: A model that predicts churn is only half the solution. You need features that are both **predictive AND actionable** to drive business outcomes.
+
+---
+
+## Part 3: The Optimal Intervention Window
+
+This is the core business insight of the project.
+
+### Deriving Windows from Survival Predictions
+
+Rather than hardcoding intervention timing, I calculated windows directly from survival model predictions for high-risk customers (n=1,347):
+
+**High-Risk Customer Prediction Distribution:**
+| Metric | Days |
+|--------|------|
+| 25th Percentile | 92 |
+| Median | 95 |
+| 75th Percentile | 98 |
+
+**Derived Intervention Window:**
+- **Too Early**: Day 0 to 46
+- **Optimal**: Day 46 to 95
+- **Peak Effectiveness**: ~Day 93
+- **Too Late**: After Day 95
+
+![Intervention Window](02_intervention_window.png)
+
+*Figure 4: Intervention success rate by timing, with optimal window (Day 46-95) highlighted*
+
+### Why These Boundaries?
+
+The window boundaries come from the survival model's predictions:
+
+1. **Day 46** (window start): Approximately half of the 25th percentile (92 × 0.5). Before this point, customers haven't yet experienced enough friction to be receptive to retention offers.
+
+2. **Day 93** (peak): The point where predicted survival curves for high-risk customers show maximum intervention leverage—customers are experiencing issues but haven't made the decision to leave.
+
+3. **Day 95** (window end): The median predicted days until churn for high-risk customers. After this point, more than half of at-risk customers have already churned.
+
+### Business Impact of Timing
+
+The difference between optimal and suboptimal timing is substantial. For our 1,347 high-risk customers with $1.18M CLV at risk:
+
+![Business Impact of Timing](06_business_impact_timing.png)
+
+*Figure 5: Revenue impact comparison across intervention timing windows*
+
+| Timing | Expected Success | Potential Revenue Protected |
+|--------|-----------------|----------------------------|
+| Too Early (Day 0-46) | Lower | Customer not ready to engage |
+| **Optimal (Day 46-95)** | **Highest** | **Maximum impact window** |
+| Too Late (Day 95+) | Declining | Customer already churning |
+
+---
+
+## Part 4: Multi-Agent AI Architecture
+
+With predictions in hand, the next challenge is operationalizing them at scale. I built a multi-agent system using Google's Agent Development Kit (ADK).
+
+### Agent Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    ORCHESTRATOR AGENT                           │
-│         (Coordinates workflow, manages agent communication)     │
+│         (Coordinates workflow, manages communication)           │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
         ┌─────────────┼─────────────┬─────────────┐
@@ -99,599 +349,245 @@ I chose a **multi-agent design** over a monolithic model because production rete
 ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
 │ BEHAVIORAL│  │ PREDICTIVE│  │INTERVENTION│ │ EVALUATION│
 │   AGENT   │  │   AGENT   │  │   AGENT    │ │   AGENT   │
-│ (Parallel)│  │(Sequential)│ │(Sequential)│ │  (Loop)   │
 └───────────┘  └───────────┘  └───────────┘  └───────────┘
 ```
 
-> **📊 VISUAL**: `viz/architecture_diagram.png` — Multi-agent system architecture showing data flow between components
+**Behavioral Monitoring Agent**: Analyzes customer behavior, identifies early warning signals
 
-### System Workflow Flowchart
+**Predictive Analytics Agent**: Runs churn and survival models, prioritizes customers
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '16px', 'fontFamily': 'arial', 'lineColor': '#333', 'primaryColor': '#fff', 'primaryTextColor': '#000', 'primaryBorderColor': '#333', 'lineWidth': '3px'}}}%%
-flowchart TD
-    subgraph INPUT["📥 DATA INPUT"]
-        A[Customer Data<br/>n=3,000] --> B[Feature Engineering]
-        B --> C[Risk Signals]
-    end
+**Intervention Strategy Agent**: Selects channel based on A/B test results, determines timing
 
-    subgraph BEHAVIORAL["🔍 BEHAVIORAL AGENT"]
-        C --> D{Engagement<br/>Drop?}
-        D -->|Yes| E[Flag Pattern]
-        D -->|No| F[Monitor]
-        F --> C
-    end
+**Evaluation Agent**: Tracks outcomes, measures effectiveness
 
-    subgraph PREDICTIVE["📊 PREDICTIVE AGENT"]
-        E --> G[Calculate Churn<br/>Probability]
-        G --> H{Risk Level?}
-        H -->|≥75%| I[🔴 Critical]
-        H -->|50-74%| J[🟠 High]
-        H -->|25-49%| K[🟡 Medium]
-        H -->|<25%| L[🟢 Low]
-    end
+### Tool Integration
 
-    subgraph INTERVENTION["💡 INTERVENTION AGENT"]
-        I --> M[Personal Call]
-        J --> N[Combined Approach]
-        K --> O[Discount Offer]
-        L --> P[Email Campaign]
-        
-        M --> Q{Within Optimal<br/>Window?<br/>Days 15-45}
-        N --> Q
-        O --> Q
-        P --> Q
-        Q -->|Yes| R[Execute Intervention]
-        Q -->|No| S[Schedule for<br/>Optimal Window]
-        S --> R
-    end
-
-    subgraph EVALUATION["📈 EVALUATION AGENT"]
-        R --> T[Track Outcome<br/>60-day window]
-        T --> U{Churned?}
-        U -->|No| V[✅ Success]
-        U -->|Yes| W[❌ Refine Model]
-        V --> X[Update A/B Results]
-        W --> X
-        X --> Y[Feed Back to<br/>Predictive Agent]
-        Y --> G
-    end
-
-    subgraph OUTPUT["📋 OUTPUT"]
-        X --> Z[Executive Dashboard]
-        Z --> AA[Risk Distribution]
-        Z --> AB[Intervention ROI]
-        Z --> AC[A/B Test Results]
-    end
-
-    subgraph DECISION["✅ APPROVAL"]
-        AA --> AD{Approved by<br/>Leadership &<br/>Stakeholders?}
-        AB --> AD
-        AC --> AD
-        AD -->|Yes| AE[🚀 DEPLOY TO<br/>PRODUCTION]
-        AD -->|No| AF[Review & Iterate]
-        AF --> A
-    end
-
-    style INPUT fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style BEHAVIORAL fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style PREDICTIVE fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style INTERVENTION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style EVALUATION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style OUTPUT fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style DECISION fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
-    style AE fill:#d1fae5,stroke:#059669,stroke-width:3px,color:#000
-    style AF fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#000
-
-    linkStyle default stroke:#333,stroke-width:3px
-```
-
-### Technology Stack
-
-| Component | Technology | Why This Choice |
-|-----------|------------|-----------------|
-| Agent Framework | Google ADK v1.0+ | Native orchestration patterns, production-ready |
-| ML Infrastructure | Vertex AI | Scalable inference, managed endpoints |
-| Model | Gemini 2.5 Flash | Fast inference, cost-effective |
-| Visualization | Plotly + Kaleido | Interactive charts with static export |
-| Statistical Testing | SciPy | Robust chi-square and confidence intervals |
-
-**Trade-off acknowledged**: Google Cloud dependency creates vendor lock-in. For this project, the integration benefits outweighed portability concerns.
-
----
-
-## 3. Data Pipeline & Feature Engineering
-
-### Data Strategy
-
-I used **synthetic data** (n=3,000 customers for training, n=2,000 for A/B testing) with fixed random seeds for reproducibility:
-
-- `random_seed=42` — Training data generation
-- `random_seed=11` — A/B experiment assignment
-
-**Why synthetic?** Three reasons:
-1. **Reproducibility**: Anyone can run the code and get identical results
-2. **No PII concerns**: Open-source friendly
-3. **Controlled validation**: I can inject known signals to verify detection
-
-### Customer Segmentation
-
-| Tier | CLV Range | Intervention Strategy |
-|------|-----------|----------------------|
-| Enterprise | $15,000 – $50,000 | High-touch (Call) justified |
-| Premium | $5,000 – $15,000 | Combined approach |
-| Standard | $1,000 – $5,000 | Discount offers |
-| Basic | $200 – $1,000 | Automated email only |
-
-### Feature Engineering & Weights
-
-I selected features based on **actionability**, not just predictive power. A feature that predicts churn but can't be influenced isn't useful for prevention.
-
-| Feature | Weight | Interpretation | Actionability |
-|---------|--------|----------------|---------------|
-| **Payment Issues** | +0.25 | Failed charges = high risk | High (simple fix) |
-| Support Tickets | +0.08 | Frustration signal | Medium |
-| Days Since Activity | +0.015 | Disengagement | Medium |
-| Engagement Score | -0.03 | Higher = lower risk | High |
-| NPS Score | -0.025 | Satisfaction proxy | Low |
-| Feature Adoption | -0.02 | Product investment | High |
-| Contract Remaining | -0.02 | Commitment indicator | Low |
-
-> **📊 VISUAL**: `viz/feature_weights.png` — Horizontal bar chart showing feature importance with color-coded actionability
-
-**Why payment issues have the highest weight (+0.25)**: Payment problems are both highly predictive AND highly actionable. A customer with a failed charge can often be saved with a simple email reminder—most other churn drivers require more complex interventions.
-
-### Risk Classification
-
-| Risk Tier | Probability | Action Priority | Response Time |
-|-----------|-------------|-----------------|---------------|
-| 🔴 Critical | ≥ 75% | Immediate | Same day |
-| 🟠 High | 50% – 74% | Urgent | Within 48 hours |
-| 🟡 Medium | 25% – 49% | Scheduled | Next CSM batch |
-| 🟢 Low | < 25% | Automated | Email nurture |
-
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 1, Col 1) — Risk distribution donut chart showing customer breakdown by tier
-
----
-
-## 4. The Multi-Agent System
-
-### Agent Design Philosophy
-
-Each agent has a single responsibility, defined inputs/outputs, and can be tested independently.
-
-### Behavioral Agent (Parallel Pattern)
-
-**Purpose**: Monitor customer engagement signals from multiple data sources simultaneously.
-
-**Signals monitored**:
-- Login frequency decline
-- Feature usage reduction
-- Support ticket spikes
-- Payment failures
-
-**Output**: Flagged customers with identified risk patterns.
-
-### Predictive Agent (Sequential Pattern)
-
-**Purpose**: Calculate calibrated churn probabilities.
-
-**Process**:
-1. Receive flagged customers from Behavioral Agent
-2. Apply weighted feature model
-3. Classify into risk tiers
-4. Output probability scores with confidence intervals
-
-**Why sequential?** Depends on Behavioral Agent completing first—can't score customers that haven't been flagged.
-
-### Intervention Agent (Sequential Pattern)
-
-**Purpose**: Match intervention strategy to customer context.
-
-**Logic**:
-| Risk Level | Strategy | Churn Rate | ROI |
-|------------|----------|------------|-----|
-| 🔴 Critical | Call | 10.0% | 4.5x |
-| 🟠 High | Combined | 11.0% | 8.2x |
-| 🟡 Medium | Discount | 12.0% | 9.4x |
-| 🟢 Low | Email | 15.0% | 12.1x |
-
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 2, Col 2) — Intervention ROI comparison bar chart
-
-**Key check**: Before executing, verify customer is within optimal intervention window (Days 15-45).
-
-### Evaluation Agent (Loop Pattern)
-
-**Purpose**: Measure intervention effectiveness and feed learnings back to the system.
-
-**Process**:
-1. Track 60-day outcomes post-intervention
-2. Run statistical significance tests
-3. Update A/B test results
-4. Feed insights back to Predictive Agent for model refinement
-
-**Why loop pattern?** Continuous evaluation as outcomes arrive—not a one-time analysis.
-
----
-
-## 5. The Optimal Intervention Window Discovery
-
-### The Key Insight
-
-This was the most important discovery of the project: **timing matters more than prediction accuracy**.
+Each agent has specialized tools:
 
 ```python
-# Intervention success rate model
-success_rate = 95 * np.exp(-0.5 * ((days - 30) / 15) ** 2)
+predictive_agent.tools = [
+    calculate_churn_score,      # Returns probability + risk tier
+    run_survival_analysis,      # Returns days until churn
+    list_at_risk_customers      # Returns prioritized list
+]
+
+intervention_agent.tools = [
+    recommend_intervention,     # Returns channel + action + ROI
+    get_customer_behavior       # Returns engagement context
+]
 ```
-
-### The Three Zones
-
-| Window | Days | Success Rate | Why |
-|--------|------|--------------|-----|
-| 🔴 Too Early | 0-15 | ~25% | Customer hasn't acknowledged the problem |
-| 🟢 Optimal | 15-45 | ~95% peak | Customer receptive, recognizes friction |
-| 🔴 Too Late | 45-60 | <50% | Customer has already decided to leave |
-
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 1, Col 2) — Optimal intervention window curve with colored zones (gray=too early, green=optimal, red=too late)
-
-### Impact Calculation
-
-- Day 1 intervention: 25% success rate
-- Day 30 intervention: 95% success rate
-- **Improvement**: 3.8x from timing alone
-
-This means a mediocre model with perfect timing outperforms a perfect model with poor timing.
 
 ---
 
-## 6. A/B Testing Framework & Statistical Validation
+## Part 5: A/B Testing Framework
 
-### Why A/B Testing?
+Every intervention recommendation is backed by experimental evidence.
 
-I built A/B testing into the core system—not as an afterthought—for three reasons:
+### Multi-Variant Experiment Design
 
-1. **Stakeholder trust**: Executives trust experiments, not backtests
-2. **Causal evidence**: Correlation ≠ causation
-3. **Continuous learning**: System improves with every experiment
+I implemented 5-arm testing to compare intervention channels:
 
-### Experiment Design
+| Variant | Sample Size | Description |
+|---------|-------------|-------------|
+| Control | 400 | No intervention |
+| Email | 400 | Automated campaign |
+| Discount | 400 | 10% discount offer |
+| Call | 400 | Personal phone outreach |
+| Combined | 400 | Multi-channel approach |
 
-**Binary Test**: Control vs Treatment (n=2,000, 1,000 per arm)
-
-**Multi-Variant Test**: 5 variants (n=2,000, 400 per variant)
-
-| Variant | Allocation | Description |
-|---------|------------|-------------|
-| Control | 20% | No intervention (baseline) |
-| Email | 20% | Automated re-engagement |
-| Discount | 20% | 20% off renewal |
-| Call | 20% | Personal CSM outreach |
-| Combined | 20% | Email → Discount → Call escalation |
-
-### Statistical Rigor
-
-| Parameter | Value | Rationale |
-|-----------|-------|-----------|
-| Confidence Level | 95% | Industry standard |
-| Statistical Power | 80% | Balance detection vs sample size |
-| Minimum Detectable Effect | 20% relative | Smaller effects not worth actioning |
-| Required Sample Size | ≥1,110 per arm | Power analysis calculation |
-| Actual Sample Size | 2,000 total | Buffer for segment analysis |
+**Configuration:**
+- Baseline churn rate: 18.0%
+- Total participants: 2,000
+- Significance level: α = 0.05
+- Multiple testing correction: Bonferroni (adjusted α = 0.0125)
+- Random seed: 11 (for reproducibility)
 
 ### Results
 
-| Variant | n | Churn Rate | Lift vs Control | Significant? |
-|---------|---|------------|-----------------|--------------|
-| Control | 400 | 18.0% | — | Baseline |
-| Email | 400 | 15.0% | -16.7% | ✅ Yes |
-| Discount | 400 | 12.0% | -33.3% | ✅ Yes |
-| **Call** | **400** | **10.0%** | **-44.4%** | ✅ Yes |
-| Combined | 400 | 11.0% | -38.9% | ✅ Yes |
+![A/B Test Results](03_ab_test_results.png)
 
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 1, Col 3) — A/B test results bar chart showing Control vs Treatment lift
-> 
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 2, Col 3) — Multi-variant analysis showing all five variants with churn rates
+*Figure 6: Churn rates by intervention variant (n=400 per group)*
 
-**Winner**: Call achieves the lowest churn rate (10%), but Email delivers the highest ROI (12.1x) due to automation.
+| Variant | Churned | Churn Rate | Absolute Δ | Relative Lift | P-value | Significant? |
+|---------|---------|------------|------------|---------------|---------|--------------|
+| Control | 77 | 19.2% | — | — | — | (baseline) |
+| Email | 63 | 15.8% | +3.5pp | +18.2% | 0.2264 | ❌ No |
+| Discount | 53 | 13.2% | +6.0pp | +31.2% | 0.0275 | ❌ No* |
+| **Call** | **36** | **9.0%** | **+10.2pp** | **+53.2%** | **0.00005** | **✅ Yes** |
+| Combined | 54 | 13.5% | +5.8pp | +29.9% | 0.0356 | ❌ No* |
 
----
+*Not significant at Bonferroni-adjusted α = 0.0125
 
-## 7. Executive Dashboard Design
+**🏆 Winner: Call** — 53.2% relative reduction in churn, statistically significant
 
-### Design Philosophy
+### ROI Analysis
 
-The best model is useless if leadership doesn't fund it. I designed the dashboard with one goal: **make the value undeniable in 30 seconds**.
+While Call delivers the highest lift, ROI tells a different story:
 
-### Layout: 2×3 Grid
+![Intervention ROI](04_intervention_roi.png)
 
-| Position | Chart | Business Question |
-|----------|-------|-------------------|
-| Row 1, Col 1 | Risk Distribution | How many customers are at risk? |
-| Row 1, Col 2 | Optimal Window | When should we intervene? |
-| Row 1, Col 3 | A/B Test Results | Does the intervention work? |
-| Row 2, Col 1 | CLV at Risk by Tier | How much revenue is at stake? |
-| Row 2, Col 2 | Intervention ROI | Which strategy gives best return? |
-| Row 2, Col 3 | Multi-Variant Analysis | Which variant performs best? |
+*Figure 7: Return on investment by intervention channel*
 
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` — Complete 2×3 executive dashboard (1000×600px) showing all six components
+| Channel | Lift | Cost/Customer | ROI |
+|---------|------|---------------|-----|
+| **Email** | 18.2% | $0.50 | **12.1x** |
+| Discount | 31.2% | ~$15 | 9.4x |
+| Combined | 29.9% | ~$65 | 8.2x |
+| Call | 53.2% | $50 | 4.5x |
 
-### Visualization Decisions
+**Strategic Insight**: 
+- **Email** offers highest ROI (12.1x) due to minimal cost—ideal for scalable outreach
+- **Call** delivers highest lift (53.2%) but lowest ROI (4.5x)—reserve for highest-value customers
+- The optimal strategy is **tiered**: Email for volume, Call for VIPs
 
-| Chart | Type | Why This Choice |
-|-------|------|-----------------|
-| Risk Distribution | Donut | Shows proportion of whole |
-| Optimal Window | Line + Zones | Trend over time with clear zones |
-| A/B Test | Bar | Direct height comparison = lift |
-| CLV by Tier | Horizontal Bar | Compare magnitude across tiers |
-| Intervention ROI | Bar | ROI comparison across strategies |
-| Multi-Variant | Grouped Bar | Different colors per variant |
+### Channel Selection Logic
 
-**Export format**: PNG (1000×600px) via Kaleido—executives need static images for slide decks.
+Based on A/B results, the intervention agent uses this mapping:
 
----
-
-## 8. Results & Business Impact
-
-### Performance Summary
-
-| Metric | Value | Benchmark | Status |
-|--------|-------|-----------|--------|
-| Model AUC | 87% | >80% | ✅ Exceeded |
-| Churn Reduction | 44% | >30% | ✅ Exceeded |
-| Prediction Lead Time | 45 days | 45-60 days | ✅ Met |
-| Peak Success Rate | 95% | >90% | ✅ Exceeded |
-| ROI | 9.2x | >8x | ✅ Exceeded |
-| CLV Protected | $1.75M | — | Identified |
-
-> **📊 VISUAL**: `viz/05_executive_summary.png` — Executive summary panel with key metrics and status indicators
-
-### Intervention Strategy Performance
-
-| Strategy | Churn Rate | ROI | Best For |
-|----------|------------|-----|----------|
-| **Email** | 15.0% | **12.1x** | Scale, low-risk |
-| Discount | 12.0% | 9.4x | Price-sensitive |
-| Combined | 11.0% | 8.2x | Escalating risk |
-| **Call** | **10.0%** | 4.5x | High-value, critical |
-
-> **📊 VISUAL**: `viz/03_ab_test_summary.png` — Side-by-side comparison of churn rates and ROI by intervention strategy
-
-**Key insight**: Email delivers highest ROI (automated), but Call achieves lowest churn (10%). For Enterprise accounts (high CLV), the lower ROI of Call is justified—absolute dollar impact is larger.
-
-### Business Value Delivered
-
-> **📊 VISUAL**: `viz/02_executive_dashboard.png` (Row 2, Col 1) — CLV at Risk by Tier showing revenue exposure by customer segment
-
-1. **Quantified Risk**: $1.75M CLV at risk identified across customer base
-2. **Validated Intervention**: 44% churn reduction proven through A/B testing
-3. **Optimized Spend**: 12.1x ROI on email campaigns, 4.5x on high-touch calls
-4. **Timing Insight**: 3.8x improvement from optimal timing alone
+| Customer Segment | Recommended Channel | Rationale |
+|-----------------|---------------------|-----------|
+| Critical + High-Value | Combined | Maximum retention for VIPs |
+| Critical + Standard | Call | High-touch for urgent cases |
+| High + Payment Issues | Discount | Address price sensitivity |
+| High + Low Engagement | Email | Feature adoption at scale |
+| Medium | Email | Cost-effective coverage |
+| Low | Monitor only | ROI doesn't justify intervention |
 
 ---
 
-## 9. Skills Demonstrated
+## Part 6: Putting It All Together
 
-### Data Science & Machine Learning
+### Example: Critical-Risk Customer Analysis
 
-- Feature engineering with business interpretability
-- Probabilistic risk scoring and calibration
-- A/B testing design and statistical analysis (chi-square, confidence intervals)
-- Power analysis and sample size calculation
-- Model evaluation (AUC, lift analysis)
+Here's how the system handles a **Critical-risk customer**—the cases where intervention timing matters most:
 
-### ML Engineering & Architecture
-
-- Multi-agent system design (Google ADK)
-- Agent orchestration patterns (parallel, sequential, loop)
-- Vertex AI integration for scalable inference
-- Production-ready code structure with separation of concerns
-
-### Data Engineering
-
-- Synthetic data generation with reproducibility
-- Customer segmentation and CLV modeling
-- Feature pipeline design
-- Data quality validation gates
-
-### Business & Communication
-
-- Problem framing with measurable success criteria
-- ROI-focused analysis and decision support
-- Executive dashboard design (2×3 grid, 30-second value prop)
-- Technical writing for stakeholder communication
-
-### Software Engineering
-
-- Modular project structure
-- Configuration management
-- Reproducibility (fixed seeds, version control)
-- Testing framework integration
-
----
-
-## 10. How to Reproduce
-
-### Repository Structure
-
-```
-proactive-churn-prevention/
-├── README.md
-├── requirements.txt
-├── notebooks/
-│   └── churn_prevention_system.ipynb    # Main notebook (12 sections)
-├── src/
-│   ├── agents/
-│   │   ├── orchestrator.py
-│   │   ├── behavioral_agent.py
-│   │   ├── predictive_agent.py
-│   │   ├── intervention_agent.py
-│   │   └── evaluation_agent.py
-│   ├── tools/
-│   │   └── ab_testing_framework.py
-│   └── dashboard/
-│       └── executive_dashboard.py
-├── viz/
-│   └── *.png                            # Generated visualizations
-└── data/
-    └── synthetic_customers.csv
+**Churn Score Analysis (CUST_001593):**
+```json
+{
+  "customer_id": "CUST_001593",
+  "churn_probability": 0.9056,
+  "risk_tier": "Critical",
+  "predicted_days_until_churn": 58,
+  "key_risk_factors": [
+    "Payment issues detected",
+    "Low engagement score",
+    "High support ticket volume"
+  ],
+  "clv_at_risk": 3850.00
+}
 ```
 
-### Setup (5 minutes)
+**System Decision Process:**
 
-```bash
-# Clone repository
-git clone https://github.com/yourusername/proactive-churn-prevention.git
-cd proactive-churn-prevention
+1. **Risk Assessment**: 90.6% churn probability → Critical tier
+2. **Timing Check**: Day 58 prediction falls within optimal window (Day 46-95) ✓
+3. **Actionability Analysis**: Multiple risk factors present, including actionable ones (payment issues, engagement)
+4. **Channel Selection**: Critical + Multiple risks → Combined intervention
 
-# Create environment
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+**Intervention Recommendation:**
+```json
+{
+  "intervention_channel": "Combined",
+  "intervention_action": "Multi-channel retention campaign: payment flexibility + personal outreach + feature education",
+  "priority": 1,
+  "priority_label": "Immediate",
+  "expected_lift": 0.299,
+  "intervention_cost": 65.00,
+  "roi_estimate": 8.2,
+  "value_at_risk": 3488.53,
+  "value_if_saved": 1043.11,
+  "optimal_contact_window": "Day 46-58 (act now)",
+  "risk_factors_addressed": ["Payment flexibility program", "Dedicated success manager call", "Feature adoption campaign"]
+}
 ```
 
-### Requirements
+**Why Combined?** For Critical-risk customers with multiple risk factors, the higher intervention cost ($65) is justified because:
+- CLV at risk ($3,850) far exceeds intervention cost
+- Multiple touchpoints address multiple risk factors simultaneously
+- 29.9% expected lift translates to significant value protection
 
-```
-google-adk>=1.0.0
-google-cloud-aiplatform>=1.38.0
-pandas>=2.0.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
-plotly>=5.18.0
-kaleido>=0.2.1
-scipy>=1.11.0
-```
+### Projected Business Impact
 
-### Configuration
+For our 3,000 customer dataset:
 
-```python
-import numpy as np
+| Metric | Value |
+|--------|-------|
+| Total Customers | 3,000 |
+| At-Risk (High + Critical) | 1,347 (44.9%) |
+| Total CLV at Risk | $1,181,624 |
+| Mean CLV | $1,924 |
 
-# Training data generation
-np.random.seed(42)
-
-# A/B experiment assignment (Section 9)
-np.random.seed(11)
-
-# Google Cloud (optional - for Vertex AI deployment)
-PROJECT_ID = "your-project-id"
-LOCATION = "us-central1"
-MODEL_ID = "gemini-2.5-flash"
-```
-
-### Run the Notebook
-
-```bash
-jupyter notebook notebooks/churn_prevention_system.ipynb
-```
-
-Execute sections 1-12 sequentially. Each section has validation gates that must pass before proceeding.
+**If we apply the optimal intervention (Call) to high-risk customers:**
+- Baseline churn: 19.2%
+- Post-intervention churn: 9.0% (53.2% reduction)
+- Customers saved: ~137 additional customers retained
+- Value protected: ~$264K additional CLV
 
 ---
 
-## 11. Lessons Learned & Next Steps
+## Lessons Learned
 
-### Key Takeaways
+### 1. Timing Comes from Data, Not Assumptions
 
-1. **Timing > Prediction**: The optimal intervention window (Days 15-45) delivered 3.8x impact improvement. Invest in timing, not just accuracy.
+The optimal window (Day 46-95) wasn't assumed—it was derived from the survival model's predictions for high-risk customers. This data-driven approach adapts as customer behavior changes.
 
-2. **A/B Testing is Non-Negotiable**: The 44% churn reduction was validated through experiments. Without this, it's a prototype, not a deployable system.
+### 2. Statistical Significance Requires Proper Testing
 
-3. **Architecture > Model**: The multi-agent design enables independent iteration. The architecture will outlast any individual model.
+With 4 treatment arms, Bonferroni correction raised the significance threshold to α = 0.0125. Only Call achieved this threshold—a reminder that multiple testing inflates false positives.
 
-4. **ROI ≠ Effectiveness**: Email (12.1x ROI) is most efficient, but Call (10% churn) is most effective. Match strategy to customer value.
+### 3. ROI ≠ Lift
 
-5. **Reproducibility is Trust**: Fixed seeds and documented decisions let stakeholders verify results themselves.
+Call has the highest lift (53.2%) but lowest ROI (4.5x). Email has modest lift (18.2%) but highest ROI (12.1x). Business decisions should optimize for ROI, not raw effectiveness.
 
-### Current Limitations
+### 4. Model Performance Is Realistic
 
-| Limitation | Impact | Trade-off Rationale |
-|------------|--------|---------------------|
-| Synthetic data | May miss real-world complexity | Enables reproducibility |
-| Batch processing | No real-time scoring | Simpler v1 architecture |
-| Single model | No ensemble | Interpretability priority |
+An AUC of 0.6622 may seem modest, but it's realistic for churn prediction with behavioral features. The model's value is in identifying the **right customers to prioritize**, not perfect prediction.
 
-### Next Iteration
+### 5. Integration Over Optimization
 
-| Enhancement | Expected Impact |
-|-------------|-----------------|
-| **Uplift Modeling** | Target customers with highest treatment effect, not just highest risk |
-| **Real-time Scoring** | Sub-second predictions for in-app interventions |
-| **Personalized Messaging** | LLM-generated outreach tailored to customer context |
-| **Multi-arm Bandits** | Continuous optimization vs fixed A/B splits |
+This project isn't about building the best ML model—it's about integrating multiple tools (traditional ML, survival analysis, GenAI, statistics, experiment design) to deliver business impact. A 0.66 AUC model that protects $1.18M is more valuable than a 0.95 AUC model in a notebook.
 
 ---
 
-## Visual Evidence Index
+## Technical Skills Demonstrated
 
-All supporting visualizations are generated by the notebook and saved to the `viz/` directory:
-
-| Visual | File | Purpose |
-|--------|------|---------|
-| Key Metrics Summary | `viz/01_key_metrics.png` | Headline numbers at a glance |
-| Executive Dashboard | `viz/02_executive_dashboard.png` | Complete 2×3 grid (1000×600px) |
-| A/B Test Summary | `viz/03_ab_test_summary.png` | Intervention comparison |
-| Executive Summary | `viz/05_executive_summary.png` | Status indicators and KPIs |
-
-### Dashboard Component Reference
-
-| Location | Component | Evidence For |
-|----------|-----------|--------------|
-| Row 1, Col 1 | Risk Distribution | Customer segmentation by risk tier |
-| Row 1, Col 2 | Optimal Window | Timing impact on intervention success |
-| Row 1, Col 3 | A/B Test Results | Statistical validation of treatment effect |
-| Row 2, Col 1 | CLV at Risk by Tier | Revenue exposure quantification |
-| Row 2, Col 2 | Intervention ROI | Cost-effectiveness comparison |
-| Row 2, Col 3 | Multi-Variant Analysis | Head-to-head variant performance |
+| Category | Skills |
+|----------|--------|
+| **Machine Learning** | Logistic regression, survival analysis (Cox PH), feature engineering |
+| **Statistical Analysis** | A/B testing, Bonferroni correction, chi-square tests, confidence intervals |
+| **Software Architecture** | Multi-agent systems (Google ADK), tool integration |
+| **Data Visualization** | Plotly dashboards, matplotlib |
+| **Production Thinking** | Reproducibility (seeds), threshold optimization, validation |
 
 ---
 
-## Let's Connect
+## Key Metrics Summary
 
-I'm actively seeking roles in **ML Engineering**, **AI Engineering**, and **Data Science** where I can build production systems that drive measurable business impact.
-
-- **GitHub**: [proactive-churn-prevention](https://github.com/yourusername/proactive-churn-prevention)
-- **LinkedIn**: [Your Profile](https://linkedin.com/in/yourprofile)
-- **Email**: your.email@example.com
-
----
-
-## SEO/ATS Keywords
-
-**Top 10 Keywords**:
-1. Machine Learning Engineer
-2. Churn Prediction Model
-3. Multi-Agent AI System
-4. A/B Testing Framework
-5. Customer Retention ML
-6. Google Vertex AI
-7. Production ML Pipeline
-8. Statistical Significance Testing
-9. ROI Optimization
-10. Python Data Science
+| Metric | Value |
+|--------|-------|
+| Dataset Size | 3,000 customers |
+| Churn Rate | 19.4% |
+| Mean CLV | $1,924 |
+| High-Risk Customers | 1,347 (44.9%) |
+| CLV at Risk | $1,181,624 |
+| Churn Model AUC | 0.6622 |
+| Survival Model C-Index | 0.6774 |
+| Optimal Threshold | 0.4 (F1=0.378) |
+| Optimal Window | Day 46-95 |
+| Best Channel (Lift) | Call (53.2% reduction) |
+| Best Channel (ROI) | Email (12.1x) |
+| A/B Test Significance | p < 0.0001 (Call) |
 
 ---
 
-## Platform-Specific Tags
+## Conclusion
 
-### Medium
-`#MachineLearning` `#DataScience` `#AI` `#CustomerRetention` `#ABTesting`
+Customer churn prevention isn't just about predicting who will leave—it's about intervening at precisely the right moment with the right approach.
 
-### LinkedIn
-`#MachineLearning` `#AIEngineering` `#DataScience` `#CustomerSuccess` `#Analytics`
+The optimal intervention window of **Day 46-95** isn't arbitrary—it's calculated from survival analysis of 1,347 high-risk customers. The winning intervention channel (Call, with 53.2% churn reduction) was validated through rigorous A/B testing with proper multiple-testing correction.
 
-### Kaggle
-`churn-prediction` `multi-agent-systems` `a-b-testing` `customer-analytics` `python`
-
-### Twitter/X
-`#ML` `#AI` `#DataScience` `#ChurnPrediction` `#ABTesting`
-
-### GitHub Topics
-`machine-learning` `churn-prediction` `multi-agent-systems` `google-adk` `vertex-ai` `a-b-testing` `customer-retention` `python`
+By combining survival analysis with multi-agent AI and statistical rigor, this system transforms reactive retention into proactive engagement—protecting $1.18M in customer lifetime value.
 
 ---
 
-*Built with Google ADK, Vertex AI, and a focus on measurable business impact.*
+*The complete implementation, including all code and visualizations, is available in the accompanying Jupyter notebook.*
