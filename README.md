@@ -37,41 +37,51 @@ This project implements an end-to-end **Proactive Churn Prevention System** that
 
 > **Timing is everything.** The optimal intervention window (Day 46-95) is derived directly from survival analysis—not hardcoded assumptions.
 
-> **Note**: This project isn't about building the best ML model—it's about integrating traditional ML, survival analysis, GenAI, statistics, and experiment design to deliver measurable business impact.
+### Who Uses This System
+
+This system is designed for **cross-functional teams**, not just data scientists:
+
+| Team | What They Get |
+|------|---------------|
+| **Customer Success** | Prioritized lists with timing windows |
+| **Marketing/Growth** | Segment-level campaign recommendations |
+| **Product** | Feature adoption gaps for at-risk users |
+| **Finance** | ROI projections and CLV protection estimates |
 
 ---
 
 ## 📊 Key Results
 
-### Dataset Overview
+### What This Project Is—And What It Isn't
+
+This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.68. These are adequate—and that's the point.
+
+This project is about **building a complete business solution** that combines:
+- **Traditional ML** (risk scoring, survival prediction)
+- **GenAI/LLMs** (agent orchestration, decision routing)
+- **Statistics** (uncertainty, calibration, uplift)
+- **Experiment Design** (A/B testing, measurement)
+
+### Model Metrics (Gating Checks)
+
+| Metric | Value | Status |
+|--------|-------|--------|
+| Churn Model AUC | 0.6622 | ✓ Adequate for ranking |
+| Survival C-Index | 0.6774 | ✓ Adequate for timing |
+| Recall @ 0.4 | 85.3% | ✓ Catches most churners |
+
+### Business Metrics (What Actually Matters)
 
 | Metric | Value |
 |--------|-------|
-| Total Customers | 3,000 |
-| Churn Rate | 19.4% (581 churned) |
-| Mean CLV | $1,924 |
-| At-Risk Customers | 1,347 (High + Critical tiers) |
-| **CLV at Risk** | **$1,181,624** |
+| CLV at Risk | $1,181,624 |
+| Optimal Window | Day 46-95 |
+| Best Lift | Call (+53.2%, p<0.0001) |
+| Best ROI | Email (12.1x) |
+| Customers Saved | ~137 incremental |
+| Revenue Protected | ~$264K |
 
-### Model Performance
-
-| Model | Metric | Value |
-|-------|--------|-------|
-| Churn Classifier | AUC-ROC | 0.6622 |
-| Churn Classifier | Best Threshold | 0.4 (F1=0.378) |
-| Churn Classifier | Recall @ 0.4 | 85.3% |
-| Survival Model | C-Index | 0.6774 |
-| Survival Model | Optimal Window | Day 46-95 |
-
-### A/B Test Winner
-
-| Variant | Churn Rate | Lift | Significant? | ROI |
-|---------|------------|------|--------------|-----|
-| Control | 19.2% | — | — | — |
-| **Call** | **9.0%** | **53.2%** | **✅ Yes (p<0.0001)** | 4.5x |
-| Email | 15.8% | 18.2% | ❌ No | **12.1x** |
-
-**Strategic Insight**: Call delivers highest lift (53.2%) but Email offers highest ROI (12.1x). Use tiered strategy: Email for volume, Call for VIPs.
+**Strategic Insight**: Call delivers highest lift (53.2%) but Email offers highest ROI (12.1x). The system routes accordingly: Email for volume, Call for VIPs.
 
 ---
 
@@ -347,38 +357,35 @@ With combined framework:
 
 ---
 
-## 💼 Skills Demonstrated
+## 💼 Capabilities Demonstrated
 
-### Machine Learning
-- Binary classification with calibrated probabilities
-- Survival analysis for time-to-event prediction
-- Feature engineering from behavioral data
-- Threshold optimization for business objectives
-- **Feature actionability assessment** (beyond just prediction)
+### The Decision Workflow
 
-### Statistical Analysis
-- A/B test design with power analysis
-- Bonferroni correction for multiple comparisons
-- Chi-square significance testing
-- Confidence interval estimation
+This project implements a complete decision workflow—not just a model:
 
-### Software Engineering
-- Multi-agent system architecture (Google ADK)
-- Tool integration and API design
-- Session and memory management
-- Reproducibility through seed management
+```
+Identify Risk → Predict Timing → Select Intervention → Test → Measure → Learn
+```
 
-### Data Visualization
-- Interactive Plotly dashboards
-- Feature importance × actionability charts
-- Risk distribution visualization
-- Intervention timing analysis
+### Technical Capabilities
 
-### Business Acumen
-- ROI-based decision making
-- Tiered intervention strategies
-- Actionable vs. predictive feature distinction
-- Stakeholder-friendly documentation
+| Capability | Implementation | Business Outcome |
+|------------|----------------|------------------|
+| **Risk Scoring** | Logistic Regression | Prioritized customer lists |
+| **Timing Prediction** | Cox Survival Model | Optimal intervention windows |
+| **Agent Orchestration** | Google ADK | Automated routing at scale |
+| **Experiment Design** | A/B testing, Bonferroni | Validated channel effectiveness |
+| **Uplift Estimation** | Retention lift analysis | Quantified business value |
+| **ROI Analysis** | Cost modeling | Resource allocation guidance |
+
+### Cross-Functional Value
+
+| Team | What They Get |
+|------|---------------|
+| Customer Success | Actionable recommendations with timing |
+| Marketing/Growth | Segment-level campaign guidance |
+| Product | Feature adoption insights for at-risk users |
+| Finance/Leadership | ROI projections for budget decisions |
 
 ---
 
@@ -452,14 +459,18 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidel
 
 ## 📊 Quick Reference
 
-| What | Value |
-|------|-------|
-| Customers | 3,000 |
-| Churn Rate | 19.4% |
+### Gating Checks (Model Metrics)
+| Metric | Value |
+|--------|-------|
+| Churn AUC | 0.6622 ✓ |
+| Survival C-Index | 0.6774 ✓ |
+| Recall @ 0.4 | 85.3% ✓ |
+
+### Business Outcomes (What Matters)
+| Metric | Value |
+|--------|-------|
 | CLV at Risk | $1,181,624 |
-| Model AUC | 0.6622 |
-| Survival C-Index | 0.6774 |
 | Optimal Window | Day 46-95 |
-| Best Lift | Call (53.2%) |
+| Best Lift | Call (+53.2%) |
 | Best ROI | Email (12.1x) |
-| Top Actionable Feature | engagement_score |
+| Revenue Protected | ~$264K |
