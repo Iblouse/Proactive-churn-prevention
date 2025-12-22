@@ -4,6 +4,24 @@
 
 ---
 
+> **"Your best model is worthless if it can't tell you when to act."**
+>
+> I built a system that reduced churn by 53% and protected $1.18M in revenue. Not by chasing a higher AUC, but by answering the question most ML projects ignore: *When exactly should we intervene?*
+
+---
+
+<!-- SEO & KEYWORDS
+Keywords: churn prediction, customer retention, survival analysis, multi-agent AI, A/B testing, machine learning operations, MLOps, Google ADK, Vertex AI, Cox proportional hazards, intervention timing, customer lifetime value, CLV, retention strategy, experiment design, business intelligence, data science portfolio, applied machine learning
+
+Meta Description: Learn how to build a proactive churn prevention system that combines traditional ML, survival analysis, GenAI agents, and A/B testing to protect $1.18M in customer lifetime value. A complete technical deep-dive with code, charts, and business impact metrics.
+-->
+
+<!-- HASHTAGS
+#MachineLearning #DataScience #ChurnPrediction #CustomerRetention #ABTesting #SurvivalAnalysis #GenAI #LLM #MLOps #GoogleADK #VertexAI #BusinessIntelligence #AppliedML #DataSciencePortfolio #CustomerSuccess #RetentionStrategy #PredictiveAnalytics #ExperimentDesign #MultiAgentAI
+-->
+
+---
+
 ## Executive Summary
 
 This project demonstrates that **when** you intervene matters as much as **whether** you intervene. By combining survival analysis with multi-agent AI, I built a system that:
@@ -13,11 +31,11 @@ This project demonstrates that **when** you intervene matters as much as **wheth
 - Protects **$1.18M in customer lifetime value** across 1,347 high-risk customers
 - Provides statistically significant results (p < 0.0001) validated through rigorous A/B testing
 
-The key insight: the optimal intervention window (Day 46-95) is derived directly from survival analysis of high-risk customer predictions—not hardcoded assumptions.
+The key insight: the optimal intervention window (Day 46-95) is derived directly from survival analysis of high-risk customer predictions, not hardcoded assumptions.
 
-### What This Project Is—And What It Isn't
+### What This Project Is (And What It Isn't)
 
-This is **not** a model optimization exercise. I did not spend weeks tuning hyperparameters or chasing leaderboard metrics. The AUC is 0.66. The C-Index is 0.68. These are adequate for the task—and that's the point.
+This is **not** a model optimization exercise. I did not spend weeks tuning hyperparameters or chasing leaderboard metrics. The AUC is 0.66. The C-Index is 0.68. These are adequate for the task, and that's the point.
 
 This project is about **building a complete business solution** that combines multiple disciplines:
 
@@ -28,7 +46,7 @@ This project is about **building a complete business solution** that combines mu
 | **Statistics** | Uncertainty quantification, calibration, uplift estimation |
 | **Experiment Design** | A/B testing, measurement, guardrails, learning loops |
 
-The value comes from how these tools **work together** to deliver retention outcomes—not from reporting a high AUC.
+The value comes from how these tools **work together** to deliver retention outcomes, not from reporting a high AUC.
 
 ### Who Uses This System
 
@@ -70,7 +88,7 @@ With a mean Customer Lifetime Value of **$1,924**, the stakes are substantial:
 - **At-Risk Customer Count**: 1,347 customers
 - **Overall Churn Rate**: 19.4% (581 of 3,000 customers)
 
-This isn't an abstract ML problem—it's a revenue protection challenge with concrete dollar amounts.
+This isn't an abstract ML problem. It's a revenue protection challenge with concrete dollar amounts.
 
 ---
 
@@ -117,7 +135,7 @@ From our Cox Proportional Hazards model, we observed the actual churn timing dis
 - 90-day retention: 85.2%
 - 120-day retention: 80.6%
 
-This tells us that most churn events occur gradually—7.7% by day 30, 12.1% by day 60, 19.4% by day 120. A one-size-fits-all intervention policy ignores this temporal pattern.
+This tells us that most churn events occur gradually: 7.7% by day 30, 12.1% by day 60, 19.4% by day 120. A one-size-fits-all intervention policy ignores this temporal pattern.
 
 ---
 
@@ -142,16 +160,16 @@ I implemented a dual-model approach:
 
 **Gating Check: Is the model good enough to proceed?**
 
-Model metrics validate whether predictions are reliable enough to act on—they're a gating check, not the goal.
+Model metrics validate whether predictions are reliable enough to act on. They're a gating check, not the goal.
 
-- **AUC-ROC: 0.6622** — Better than random (0.5), adequate for prioritization
+- **AUC-ROC: 0.6622** (better than random 0.5, adequate for prioritization)
 - Best threshold: 0.4 (by F1 score)
 - At threshold 0.4:
   - Recall: 85.3% (catches most churners)
   - Precision: 24.3%
   - F1: 0.378
 
-I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the business value lies. The model's job is to **rank customers by risk**—and 0.66 is sufficient for that. The real question is: *does acting on these predictions improve retention?* That's what the A/B tests answer.
+I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the business value lies. The model's job is to **rank customers by risk**, and 0.66 is sufficient for that. The real question is: *does acting on these predictions improve retention?* That's what the A/B tests answer.
 
 **Threshold Analysis:**
 
@@ -206,7 +224,7 @@ Churned         17       99
 
 ---
 
-## Part 2.5: From Prediction to Action—The Actionability Gap
+## Part 2.5: From Prediction to Action (The Actionability Gap)
 
 This is a critical insight that separates academic ML from business-impactful ML: **the best predictors aren't always the best intervention targets.**
 
@@ -224,32 +242,32 @@ Consider our top feature by coefficient magnitude:
 
 **The Problem**: `tenure_months` is our strongest predictor (coefficient = -0.50), but we can't change how long a customer has been with us. It's useful for prediction but useless for intervention.
 
-**The Insight**: Features like `engagement_score` and `feature_usage_pct` have smaller coefficients but **HIGH actionability**—we can directly influence them through product tours, email campaigns, and feature education.
+**The Insight**: Features like `engagement_score` and `feature_usage_pct` have smaller coefficients but **HIGH actionability**. We can directly influence them through product tours, email campaigns, and feature education.
 
 ### Actionability Framework
 
 I categorized all 15 features by business actionability:
 
 **High Actionability** (can directly influence through interventions):
-- `engagement_score` — Improve via feature education, onboarding
-- `feature_usage_pct` — Drive through product tours, tips
-- `email_open_rate` — Optimize subject lines, send times
-- `login_frequency_monthly` — Increase via notifications, value reminders
-- `has_payment_issues` — Address via payment plans, reminders
+- `engagement_score`: Improve via feature education, onboarding
+- `feature_usage_pct`: Drive through product tours, tips
+- `email_open_rate`: Optimize subject lines, send times
+- `login_frequency_monthly`: Increase via notifications, value reminders
+- `has_payment_issues`: Address via payment plans, reminders
 
 **Medium Actionability** (can influence indirectly):
-- `support_tickets_90d` — Improve via better documentation, proactive help
-- `is_inactive` — Re-engage via campaigns
-- `last_activity_days` — Trigger re-engagement workflows
-- `payment_delays_12m` — Offer payment flexibility
-- `discount_count` — Strategic discount timing
+- `support_tickets_90d`: Improve via better documentation, proactive help
+- `is_inactive`: Re-engage via campaigns
+- `last_activity_days`: Trigger re-engagement workflows
+- `payment_delays_12m`: Offer payment flexibility
+- `discount_count`: Strategic discount timing
 
 **Low Actionability** (difficult to change):
-- `tenure_months` — Cannot change customer tenure
-- `nps_score` — Lagging indicator, slow to move
-- `monthly_charges` — Pricing is strategic decision
-- `is_high_value` — Historical behavior
-- `is_heavy_support_user` — Symptom, not cause
+- `tenure_months`: Cannot change customer tenure
+- `nps_score`: Lagging indicator, slow to move
+- `monthly_charges`: Pricing is strategic decision
+- `is_high_value`: Historical behavior
+- `is_heavy_support_user`: Symptom, not cause
 
 ### Combined Scoring: Importance × Actionability
 
@@ -339,7 +357,7 @@ The window boundaries come from the survival model's predictions:
 
 1. **Day 46** (window start): Approximately half of the 25th percentile (92 × 0.5). Before this point, customers haven't yet experienced enough friction to be receptive to retention offers.
 
-2. **Day 93** (peak): The point where predicted survival curves for high-risk customers show maximum intervention leverage—customers are experiencing issues but haven't made the decision to leave.
+2. **Day 93** (peak): The point where predicted survival curves for high-risk customers show maximum intervention leverage. Customers are experiencing issues but haven't made the decision to leave.
 
 3. **Day 95** (window end): The median predicted days until churn for high-risk customers. After this point, more than half of at-risk customers have already churned.
 
@@ -431,11 +449,11 @@ The system includes guardrails for edge cases:
 
 ---
 
-## Part 5: A/B Testing—Validating That Interventions Work
+## Part 5: A/B Testing (Validating That Interventions Work)
 
 Model predictions are hypotheses. A/B tests are proof.
 
-Without experimentation, you're guessing which interventions work. With experimentation, you **know**—and you can quantify the impact.
+Without experimentation, you're guessing which interventions work. With experimentation, you **know**, and you can quantify the impact.
 
 ### Multi-Variant Experiment Design
 
@@ -464,7 +482,7 @@ I implemented 5-arm testing to compare intervention channels:
 
 | Variant | Churned | Churn Rate | Absolute Δ | Relative Lift | P-value | Significant? |
 |---------|---------|------------|------------|---------------|---------|--------------|
-| Control | 77 | 19.2% | — | — | — | (baseline) |
+| Control | 77 | 19.2% | - | - | - | (baseline) |
 | Email | 63 | 15.8% | +3.5pp | +18.2% | 0.2264 | ❌ No |
 | Discount | 53 | 13.2% | +6.0pp | +31.2% | 0.0275 | ❌ No* |
 | **Call** | **36** | **9.0%** | **+10.2pp** | **+53.2%** | **0.00005** | **✅ Yes** |
@@ -472,7 +490,7 @@ I implemented 5-arm testing to compare intervention channels:
 
 *Not significant at Bonferroni-adjusted α = 0.0125
 
-**🏆 Winner: Call** — 53.2% relative reduction in churn, statistically significant
+**🏆 Winner: Call** with 53.2% relative reduction in churn, statistically significant
 
 ### ROI Analysis
 
@@ -490,8 +508,8 @@ While Call delivers the highest lift, ROI tells a different story:
 | Call | 53.2% | $50 | 4.5x |
 
 **Strategic Insight**: 
-- **Email** offers highest ROI (12.1x) due to minimal cost—ideal for scalable outreach
-- **Call** delivers highest lift (53.2%) but lowest ROI (4.5x)—reserve for highest-value customers
+- **Email** offers highest ROI (12.1x) due to minimal cost, making it ideal for scalable outreach
+- **Call** delivers highest lift (53.2%) but lowest ROI (4.5x), so reserve it for highest-value customers
 - The optimal strategy is **tiered**: Email for volume, Call for VIPs
 
 ### Channel Selection Logic
@@ -513,7 +531,7 @@ Based on A/B results, the intervention agent uses this mapping:
 
 ### Example: Critical-Risk Customer Analysis
 
-Here's how the system handles a **Critical-risk customer**—the cases where intervention timing matters most:
+Here's how the system handles a **Critical-risk customer**-the cases where intervention timing matters most:
 
 **Churn Score Analysis (CUST_001593):**
 ```json
@@ -581,7 +599,7 @@ For our 3,000 customer dataset:
 
 ## Measuring What Matters: Model Metrics vs. Business Metrics
 
-### Metrics Are Necessary—But Not Sufficient
+### Metrics Are Necessary-But Not Sufficient
 
 There's a common mistake in ML projects: optimizing model metrics and assuming business value follows. It doesn't.
 
@@ -590,7 +608,7 @@ There's a common mistake in ML projects: optimizing model metrics and assuming b
 | **Model Metrics** | Prediction quality | AUC, Precision, Recall, C-Index |
 | **Business Metrics** | Outcome improvement | Retention lift, Revenue saved, ROI |
 
-Model metrics are **gating checks**—they tell you whether the model is good enough to deploy. Business metrics tell you whether the system **actually works**.
+Model metrics are **gating checks**-they tell you whether the model is good enough to deploy. Business metrics tell you whether the system **actually works**.
 
 ### This Project's Gating Checks (Model Metrics)
 
@@ -600,29 +618,29 @@ Model metrics are **gating checks**—they tell you whether the model is good en
 | Survival C-Index | 0.6774 | Reasonable concordance for timing |
 | Recall @ 0.4 | 85.3% | Catches most at-risk customers |
 
-These metrics passed the gate. I didn't optimize further because **the bottleneck isn't prediction accuracy**—it's whether interventions actually work.
+These metrics passed the gate. I didn't optimize further because **the bottleneck isn't prediction accuracy**-it's whether interventions actually work.
 
 ### What Actually Matters (Business Metrics)
 
 | Metric | Value | Why It Matters |
 |--------|-------|----------------|
-| **Retention Lift (Call)** | +53.2% | Interventions work—validated by experiment |
+| **Retention Lift (Call)** | +53.2% | Interventions work-validated by experiment |
 | **Incremental Customers Saved** | ~137 | Real customers retained who would have churned |
 | **Revenue Protected** | ~$264K | Concrete dollar impact |
 | **Intervention Cost** | $50/call | Necessary for ROI calculation |
 | **Net ROI** | 4.5x (Call), 12.1x (Email) | Justifies the investment |
-| **Statistical Significance** | p < 0.0001 | Not a fluke—replicable |
+| **Statistical Significance** | p < 0.0001 | Not a fluke-replicable |
 
 ### Business-First Evaluation by Segment
 
-The system performs differently across segments—and that's intentional:
+The system performs differently across segments-and that's intentional:
 
 | Segment | Baseline Churn | Post-Intervention | Lift | Channel | ROI |
 |---------|---------------|-------------------|------|---------|-----|
 | Critical (≥75% prob) | 19.2% | 9.0% | 53.2% | Call | 4.5x |
 | High (50-74% prob) | 19.2% | 13.2% | 31.2% | Discount | 9.4x |
 | Medium (25-49% prob) | 19.2% | 15.8% | 18.2% | Email | 12.1x |
-| Low (<25% prob) | — | — | — | Monitor | — |
+| Low (<25% prob) | - | - | - | Monitor | - |
 
 **Key Insight**: The "best" intervention depends on the segment. Call has highest lift but lowest ROI. Email has modest lift but scales efficiently. The system routes accordingly.
 
@@ -636,7 +654,7 @@ Intervention → Outcome Tracking → Update Channel Effectiveness → Better Ro
      └──────────────────────────────────────────────────────────────┘
 ```
 
-If Call stops outperforming, the system will detect it and adjust recommendations. This isn't a static model—it's a learning system.
+If Call stops outperforming, the system will detect it and adjust recommendations. This isn't a static model-it's a learning system.
 
 ---
 
@@ -644,15 +662,15 @@ If Call stops outperforming, the system will detect it and adjust recommendation
 
 ### 1. Timing Comes from Data, Not Assumptions
 
-The optimal window (Day 46-95) wasn't assumed—it was derived from the survival model's predictions for high-risk customers. This data-driven approach adapts as customer behavior changes.
+The optimal window (Day 46-95) wasn't assumed-it was derived from the survival model's predictions for high-risk customers. This data-driven approach adapts as customer behavior changes.
 
 ### 2. Statistical Significance Requires Proper Testing
 
-With 4 treatment arms, Bonferroni correction raised the significance threshold to α = 0.0125. Only Call achieved this threshold—a reminder that multiple testing inflates false positives. Ship what's proven; iterate on what's promising.
+With 4 treatment arms, Bonferroni correction raised the significance threshold to α = 0.0125. Only Call achieved this threshold-a reminder that multiple testing inflates false positives. Ship what's proven; iterate on what's promising.
 
 ### 3. ROI Beats Lift for Decision-Making
 
-Call has the highest lift (53.2%) but lowest ROI (4.5x). Email has modest lift (18.2%) but highest ROI (12.1x). When resources are constrained—and they always are—ROI determines allocation.
+Call has the highest lift (53.2%) but lowest ROI (4.5x). Email has modest lift (18.2%) but highest ROI (12.1x). When resources are constrained-and they always are-ROI determines allocation.
 
 ### 4. Model Metrics Are Gating Checks, Not Goals
 
@@ -674,7 +692,7 @@ The value is in the **system**, not the parts.
 
 ### The Decision Workflow
 
-This project implements a complete decision workflow—not just a model:
+This project implements a complete decision workflow, not just a model:
 
 ```
 Identify Risk → Predict Timing → Select Intervention → Test → Measure → Learn → Iterate

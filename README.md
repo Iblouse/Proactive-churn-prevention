@@ -35,7 +35,7 @@ This project implements an end-to-end **Proactive Churn Prevention System** that
 
 ### The Core Insight
 
-> **Timing is everything.** The optimal intervention window (Day 46-95) is derived directly from survival analysis—not hardcoded assumptions.
+> **Timing is everything.** The optimal intervention window (Day 46-95) is derived directly from survival analysis, not hardcoded assumptions.
 
 ### Who Uses This System
 
@@ -52,9 +52,9 @@ This system is designed for **cross-functional teams**, not just data scientists
 
 ## 📊 Key Results
 
-### What This Project Is—And What It Isn't
+### What This Project Is (And What It Isn't)
 
-This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.68. These are adequate—and that's the point.
+This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.68. These are adequate, and that's the point.
 
 This project is about **building a complete business solution** that combines:
 - **Traditional ML** (risk scoring, survival prediction)
@@ -69,17 +69,28 @@ This project is about **building a complete business solution** that combines:
 | Churn Model AUC | 0.6622 | ✓ Adequate for ranking |
 | Survival C-Index | 0.6774 | ✓ Adequate for timing |
 | Recall @ 0.4 | 85.3% | ✓ Catches most churners |
+| Precision @ 0.4 | 24.3% | ✓ Acceptable for intervention |
 
 ### Business Metrics (What Actually Matters)
 
 | Metric | Value |
 |--------|-------|
+| Dataset | 3,000 customers (19.4% churn) |
+| At-Risk Customers | 1,347 (High + Critical) |
 | CLV at Risk | $1,181,624 |
 | Optimal Window | Day 46-95 |
 | Best Lift | Call (+53.2%, p<0.0001) |
 | Best ROI | Email (12.1x) |
-| Customers Saved | ~137 incremental |
-| Revenue Protected | ~$264K |
+
+### A/B Test Results (n=400/variant, Bonferroni α=0.0125)
+
+| Variant | Churn Rate | Lift | P-value | Significant? |
+|---------|------------|------|---------|--------------|
+| Control | 19.2% | - | - | (baseline) |
+| Email | 15.8% | +18.2% | 0.2264 | ❌ No |
+| Discount | 13.2% | +31.2% | 0.0275 | ❌ No |
+| **Call** | **9.0%** | **+53.2%** | **0.00005** | **✅ Yes** |
+| Combined | 13.5% | +29.9% | 0.0356 | ❌ No |
 
 **Strategic Insight**: Call delivers highest lift (53.2%) but Email offers highest ROI (12.1x). The system routes accordingly: Email for volume, Call for VIPs.
 
@@ -292,21 +303,21 @@ Where: High = 3.0, Medium = 2.0, Low = 1.0
 ### Actionability Categories
 
 **High Actionability** (can directly influence):
-- `engagement_score` — Product tours, onboarding
-- `feature_usage_pct` — Feature education, tips
-- `email_open_rate` — Subject line optimization
-- `login_frequency_monthly` — Notifications, value reminders
-- `has_payment_issues` — Payment flexibility programs
+- `engagement_score` - Product tours, onboarding
+- `feature_usage_pct` - Feature education, tips
+- `email_open_rate` - Subject line optimization
+- `login_frequency_monthly` - Notifications, value reminders
+- `has_payment_issues` - Payment flexibility programs
 
 **Medium Actionability** (can influence indirectly):
-- `support_tickets_90d` — Better documentation
-- `is_inactive` — Re-engagement campaigns
-- `last_activity_days` — Triggered workflows
+- `support_tickets_90d` - Better documentation
+- `is_inactive` - Re-engagement campaigns
+- `last_activity_days` - Triggered workflows
 
 **Low Actionability** (difficult to change):
-- `tenure_months` — Cannot change tenure
-- `nps_score` — Lagging indicator
-- `monthly_charges` — Strategic pricing decision
+- `tenure_months` - Cannot change tenure
+- `nps_score` - Lagging indicator
+- `monthly_charges` - Strategic pricing decision
 
 ### Business Impact
 
@@ -327,7 +338,7 @@ With combined framework:
 
 | Variant | n | Churned | Rate | Lift | P-value | Significant? |
 |---------|---|---------|------|------|---------|--------------|
-| Control | 400 | 77 | 19.2% | — | — | (baseline) |
+| Control | 400 | 77 | 19.2% | - | - | (baseline) |
 | Email | 400 | 63 | 15.8% | +18.2% | 0.2264 | ❌ No |
 | Discount | 400 | 53 | 13.2% | +31.2% | 0.0275 | ❌ No* |
 | **Call** | **400** | **36** | **9.0%** | **+53.2%** | **0.00005** | **✅ Yes** |
@@ -361,7 +372,7 @@ With combined framework:
 
 ### The Decision Workflow
 
-This project implements a complete decision workflow—not just a model:
+This project implements a complete decision workflow, not just a model:
 
 ```
 Identify Risk → Predict Timing → Select Intervention → Test → Measure → Learn
