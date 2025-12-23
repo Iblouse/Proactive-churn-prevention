@@ -498,18 +498,24 @@ While Call delivers the highest lift, ROI tells a different story:
 
 ![Intervention ROI](04_intervention_roi.png)
 
-*Figure 7: Return on investment by intervention channel*
+*Figure 7: ROI by intervention channel, calculated as (avg_CLV × absolute_reduction) / cost*
 
-| Channel | Lift | Cost/Customer | ROI |
-|---------|------|---------------|-----|
-| **Email** | 18.2% | $0.50 | **12.1x** |
-| Discount | 31.2% | ~$15 | 9.4x |
-| Combined | 29.9% | ~$65 | 8.2x |
-| Call | 53.2% | $50 | 4.5x |
+| Channel | Relative Lift | Absolute Δ | Cost/Customer | ROI |
+|---------|---------------|------------|---------------|-----|
+| **Email** | 18.2% | 3.4pp | $0.50 | **127.9x** |
+| Discount | 31.2% | 6.0pp | $10.00 | 11.3x |
+| Call | 53.2% | 10.2pp | $35.00 | 5.5x |
+| Combined | 29.9% | 5.7pp | $45.50 | 2.4x |
+
+**Understanding the metrics:**
+- **Relative Lift**: Percentage improvement vs control (e.g., "churn reduced BY 53.2%")
+- **Absolute Δ**: Percentage points saved (e.g., "churn drops FROM 19.2% TO 9.0%" = 10.2pp)
+- **ROI Formula**: `(avg_CLV × absolute_reduction) / cost`
 
 **Strategic Insight**: 
-- **Email** offers highest ROI (12.1x) due to minimal cost, making it ideal for scalable outreach
-- **Call** delivers highest lift (53.2%) but lowest ROI (4.5x), so reserve it for highest-value customers
+- **Email** offers exceptional ROI (127.9x) due to near-zero marginal cost, ideal for broad outreach
+- **Call** delivers highest absolute impact (10.2pp reduction) with solid ROI (5.5x), reserve for high-value customers
+- **Target ROI**: 5-10x on retention investments is the business benchmark
 - The optimal strategy is **tiered**: Email for volume, Call for VIPs
 
 ### Channel Selection Logic
@@ -564,8 +570,8 @@ Here's how the system handles a **Critical-risk customer**-the cases where inter
   "priority": 1,
   "priority_label": "Immediate",
   "expected_lift": 0.299,
-  "intervention_cost": 65.00,
-  "roi_estimate": 8.2,
+  "intervention_cost": 45.50,
+  "roi_estimate": 2.4,
   "value_at_risk": 3488.53,
   "value_if_saved": 1043.11,
   "optimal_contact_window": "Day 46-58 (act now)",
@@ -573,10 +579,10 @@ Here's how the system handles a **Critical-risk customer**-the cases where inter
 }
 ```
 
-**Why Combined?** For Critical-risk customers with multiple risk factors, the higher intervention cost ($65) is justified because:
+**Why Combined?** For Critical-risk customers with multiple risk factors, the higher intervention cost ($45.50) is justified because:
 - CLV at risk ($3,850) far exceeds intervention cost
 - Multiple touchpoints address multiple risk factors simultaneously
-- 29.9% expected lift translates to significant value protection
+- 29.9% expected lift (5.7pp absolute reduction) translates to significant value protection
 
 ### Projected Business Impact
 
@@ -624,25 +630,25 @@ These metrics passed the gate. I didn't optimize further because **the bottlenec
 
 | Metric | Value | Why It Matters |
 |--------|-------|----------------|
-| **Retention Lift (Call)** | +53.2% | Interventions work-validated by experiment |
+| **Retention Lift (Call)** | +53.2% (10.2pp) | Interventions work, validated by experiment |
 | **Incremental Customers Saved** | ~137 | Real customers retained who would have churned |
 | **Revenue Protected** | ~$264K | Concrete dollar impact |
-| **Intervention Cost** | $50/call | Necessary for ROI calculation |
-| **Net ROI** | 4.5x (Call), 12.1x (Email) | Justifies the investment |
-| **Statistical Significance** | p < 0.0001 | Not a fluke-replicable |
+| **Intervention Cost** | $35/call | Necessary for ROI calculation |
+| **Net ROI** | 5.5x (Call), 11.3x (Discount) | Justifies the investment |
+| **Statistical Significance** | p < 0.0001 | Not a fluke, replicable |
 
 ### Business-First Evaluation by Segment
 
-The system performs differently across segments-and that's intentional:
+The system performs differently across segments, and that's intentional:
 
-| Segment | Baseline Churn | Post-Intervention | Lift | Channel | ROI |
-|---------|---------------|-------------------|------|---------|-----|
-| Critical (≥75% prob) | 19.2% | 9.0% | 53.2% | Call | 4.5x |
-| High (50-74% prob) | 19.2% | 13.2% | 31.2% | Discount | 9.4x |
-| Medium (25-49% prob) | 19.2% | 15.8% | 18.2% | Email | 12.1x |
-| Low (<25% prob) | - | - | - | Monitor | - |
+| Segment | Baseline Churn | Post-Intervention | Rel. Lift | Abs. Δ | Channel | ROI |
+|---------|---------------|-------------------|-----------|--------|---------|-----|
+| Critical (≥75% prob) | 19.2% | 9.0% | 53.2% | 10.2pp | Call | 5.5x |
+| High (50-74% prob) | 19.2% | 13.2% | 31.2% | 6.0pp | Discount | 11.3x |
+| Medium (25-49% prob) | 19.2% | 15.8% | 18.2% | 3.4pp | Email | 127.9x |
+| Low (<25% prob) | - | - | - | - | Monitor | - |
 
-**Key Insight**: The "best" intervention depends on the segment. Call has highest lift but lowest ROI. Email has modest lift but scales efficiently. The system routes accordingly.
+**Key Insight**: The "best" intervention depends on the segment. Call has highest absolute impact (10.2pp) but moderate ROI. Email has modest lift but exceptional ROI due to near-zero cost. The system routes accordingly.
 
 ### The Feedback Loop
 
@@ -670,7 +676,7 @@ With 4 treatment arms, Bonferroni correction raised the significance threshold t
 
 ### 3. ROI Beats Lift for Decision-Making
 
-Call has the highest lift (53.2%) but lowest ROI (4.5x). Email has modest lift (18.2%) but highest ROI (12.1x). When resources are constrained-and they always are-ROI determines allocation.
+Call has the highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email has modest lift (3.4pp) but exceptional ROI (127.9x) due to near-zero cost. When resources are constrained, and they always are, ROI determines allocation. Target: 5-10x on retention investments.
 
 ### 4. Model Metrics Are Gating Checks, Not Goals
 
@@ -737,7 +743,7 @@ The system is designed for real teams:
 | At-Risk Customers | 1,347 |
 | Optimal Intervention Window | Day 46-95 |
 | Best Channel (Lift) | Call (+53.2%, p < 0.0001) |
-| Best Channel (ROI) | Email (12.1x) |
+| Best Channel (ROI) | Email (127.9x) |
 | Incremental Customers Saved | ~137 |
 | Revenue Protected | ~$264K |
 
@@ -755,8 +761,8 @@ That system requires multiple disciplines working together:
 
 The model's AUC is 0.66. That's fine. What matters is:
 - The optimal window (Day 46-95) is **derived from data**, not assumed
-- The winning channel (Call, +53.2% lift) is **validated by experiment**, not guessed
-- The ROI (4.5x-12.1x depending on channel) is **calculated**, not hoped for
+- The winning channel (Call, +53.2% lift / 10.2pp absolute) is **validated by experiment**, not guessed
+- The ROI (5.5x-127.9x depending on channel) is **calculated from A/B test data**, not hoped for
 - The system is **usable by CS, Marketing, and Product teams**, not just data scientists
 
 This is what applied ML looks like: adequate models, rigorous experimentation, measurable outcomes.

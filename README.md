@@ -79,20 +79,20 @@ This project is about **building a complete business solution** that combines:
 | At-Risk Customers | 1,347 (High + Critical) |
 | CLV at Risk | $1,181,624 |
 | Optimal Window | Day 46-95 |
-| Best Lift | Call (+53.2%, p<0.0001) |
-| Best ROI | Email (12.1x) |
+| Best Lift | Call (+53.2% / 10.2pp, p<0.0001) |
+| Best ROI | Email (127.9x) |
 
 ### A/B Test Results (n=400/variant, Bonferroni α=0.0125)
 
-| Variant | Churn Rate | Lift | P-value | Significant? |
-|---------|------------|------|---------|--------------|
-| Control | 19.2% | - | - | (baseline) |
-| Email | 15.8% | +18.2% | 0.2264 | ❌ No |
-| Discount | 13.2% | +31.2% | 0.0275 | ❌ No |
-| **Call** | **9.0%** | **+53.2%** | **0.00005** | **✅ Yes** |
-| Combined | 13.5% | +29.9% | 0.0356 | ❌ No |
+| Variant | Churn Rate | Rel. Lift | Abs. Δ | P-value | Significant? |
+|---------|------------|-----------|--------|---------|--------------|
+| Control | 19.2% | - | - | - | (baseline) |
+| Email | 15.8% | +18.2% | 3.4pp | 0.2264 | ❌ No |
+| Discount | 13.2% | +31.2% | 6.0pp | 0.0275 | ❌ No |
+| **Call** | **9.0%** | **+53.2%** | **10.2pp** | **0.00005** | **✅ Yes** |
+| Combined | 13.5% | +29.9% | 5.7pp | 0.0356 | ❌ No |
 
-**Strategic Insight**: Call delivers highest lift (53.2%) but Email offers highest ROI (12.1x). The system routes accordingly: Email for volume, Call for VIPs.
+**Strategic Insight**: Call delivers highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email offers exceptional ROI (127.9x) due to near-zero cost. Target ROI: 5-10x on retention investments.
 
 ---
 
@@ -348,12 +348,16 @@ With combined framework:
 
 ### ROI Analysis
 
-| Channel | Lift | Cost | ROI | Best For |
-|---------|------|------|-----|----------|
-| **Email** | 18.2% | $0.50 | **12.1x** | All customers (scalable) |
-| Discount | 31.2% | $15 | 9.4x | Price-sensitive segments |
-| Combined | 29.9% | $65 | 8.2x | Critical + high-value |
-| Call | 53.2% | $50 | 4.5x | VIP customers only |
+ROI is calculated using **absolute churn reduction** (not relative lift):
+- Formula: `ROI = (avg_CLV × absolute_reduction) / intervention_cost`
+- Target ROI: 5-10x on retention investments
+
+| Channel | Rel. Lift | Abs. Δ | Cost | ROI | Best For |
+|---------|-----------|--------|------|-----|----------|
+| **Email** | 18.2% | 3.4pp | $0.50 | **127.9x** | All customers (scalable) |
+| Discount | 31.2% | 6.0pp | $10.00 | 11.3x | Price-sensitive segments |
+| Call | 53.2% | 10.2pp | $35.00 | 5.5x | VIP customers |
+| Combined | 29.9% | 5.7pp | $45.50 | 2.4x | Critical + high-value |
 
 ### Recommended Tiered Strategy
 
@@ -482,6 +486,7 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidel
 |--------|-------|
 | CLV at Risk | $1,181,624 |
 | Optimal Window | Day 46-95 |
-| Best Lift | Call (+53.2%) |
-| Best ROI | Email (12.1x) |
+| Best Lift | Call (+53.2% / 10.2pp) |
+| Best ROI | Email (127.9x) |
+| Target ROI | 5-10x |
 | Revenue Protected | ~$264K |
