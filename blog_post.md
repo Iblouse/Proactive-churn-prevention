@@ -502,10 +502,10 @@ While Call delivers the highest lift, ROI tells a different story:
 
 | Channel | Relative Lift | Absolute Δ | Cost/Customer | ROI |
 |---------|---------------|------------|---------------|-----|
-| **Email** | 18.2% | 3.4pp | $0.50 | **127.9x** |
+| **Email** | 18.2% | 3.5pp | $0.50 | **127.9x** |
 | Discount | 31.2% | 6.0pp | $10.00 | 11.3x |
 | Call | 53.2% | 10.2pp | $35.00 | 5.5x |
-| Combined | 29.9% | 5.7pp | $45.50 | 2.4x |
+| Combined | 29.9% | 5.8pp | $45.50 | 2.4x |
 
 **Understanding the metrics:**
 - **Relative Lift**: Percentage improvement vs control (e.g., "churn reduced BY 53.2%")
@@ -582,7 +582,7 @@ Here's how the system handles a **Critical-risk customer**-the cases where inter
 **Why Combined?** For Critical-risk customers with multiple risk factors, the higher intervention cost ($45.50) is justified because:
 - CLV at risk ($3,850) far exceeds intervention cost
 - Multiple touchpoints address multiple risk factors simultaneously
-- 29.9% expected lift (5.7pp absolute reduction) translates to significant value protection
+- 29.9% expected lift (5.8pp absolute reduction) translates to significant value protection
 
 ### Projected Business Impact
 
@@ -645,7 +645,7 @@ The system performs differently across segments, and that's intentional:
 |---------|---------------|-------------------|-----------|--------|---------|-----|
 | Critical (≥75% prob) | 19.2% | 9.0% | 53.2% | 10.2pp | Call | 5.5x |
 | High (50-74% prob) | 19.2% | 13.2% | 31.2% | 6.0pp | Discount | 11.3x |
-| Medium (25-49% prob) | 19.2% | 15.8% | 18.2% | 3.4pp | Email | 127.9x |
+| Medium (25-49% prob) | 19.2% | 15.8% | 18.2% | 3.5pp | Email | 127.9x |
 | Low (<25% prob) | - | - | - | - | Monitor | - |
 
 **Key Insight**: The "best" intervention depends on the segment. Call has highest absolute impact (10.2pp) but moderate ROI. Email has modest lift but exceptional ROI due to near-zero cost. The system routes accordingly.
@@ -676,7 +676,7 @@ With 4 treatment arms, Bonferroni correction raised the significance threshold t
 
 ### 3. ROI Beats Lift for Decision-Making
 
-Call has the highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email has modest lift (3.4pp) but exceptional ROI (127.9x) due to near-zero cost. When resources are constrained, and they always are, ROI determines allocation. Target: 5-10x on retention investments.
+Call has the highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email has modest lift (3.5pp) but exceptional ROI (127.9x) due to near-zero cost. When resources are constrained, and they always are, ROI determines allocation. Target: 5-10x on retention investments.
 
 ### 4. Model Metrics Are Gating Checks, Not Goals
 

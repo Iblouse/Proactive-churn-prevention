@@ -87,10 +87,10 @@ This project is about **building a complete business solution** that combines:
 | Variant | Churn Rate | Rel. Lift | Abs. Δ | P-value | Significant? |
 |---------|------------|-----------|--------|---------|--------------|
 | Control | 19.2% | - | - | - | (baseline) |
-| Email | 15.8% | +18.2% | 3.4pp | 0.2264 | ❌ No |
+| Email | 15.8% | +18.2% | 3.5pp | 0.2264 | ❌ No |
 | Discount | 13.2% | +31.2% | 6.0pp | 0.0275 | ❌ No |
 | **Call** | **9.0%** | **+53.2%** | **10.2pp** | **0.00005** | **✅ Yes** |
-| Combined | 13.5% | +29.9% | 5.7pp | 0.0356 | ❌ No |
+| Combined | 13.5% | +29.9% | 5.8pp | 0.0356 | ❌ No |
 
 **Strategic Insight**: Call delivers highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email offers exceptional ROI (127.9x) due to near-zero cost. Target ROI: 5-10x on retention investments.
 
@@ -156,12 +156,12 @@ This project is about **building a complete business solution** that combines:
 ### Data Flow
 
 ```
-Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → Intervention
-     │                │                   │               │                    │               │
-     ▼                ▼                   ▼               ▼                    ▼               ▼
-  3,000           15 features         Probability      Days Until         Risk-Based        A/B Test
- Customers       + Actionability      + Risk Tier       Churn             Routing          Validated
-                   Scoring            AUC: 0.6622    Window: 46-95     Channel Select    Winner: Call
+Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → Local Test → A/B Test → Dashboard
+     │                │                   │               │                    │              │            │           │
+     ▼                ▼                   ▼               ▼                    ▼              ▼            ▼           ▼
+  3,000           15 features         Probability      Days Until         Risk-Based     Validate     Validate    Executive
+ Customers       + Actionability      + Risk Tier       Churn             Routing        Tools        Channels    Reporting
+                   Scoring            AUC: 0.6622    Window: 46-95     Channel Select              Winner: Call
 ```
 
 ---
@@ -210,13 +210,14 @@ jupyter notebook proactive-churn-prevention.ipynb
 | Section | Description | Key Output |
 |---------|-------------|------------|
 | 1-2. Setup & Data | Configuration, synthetic data | 3,000 customers, 19.4% churn |
-| 3. Feature Engineering | 15 features + actionability | engagement_score, feature_usage_pct |
-| 4. Churn Model | Logistic Regression | AUC: 0.6622, threshold: 0.4 |
-| 5. Survival Analysis | Cox PH model | Window: Day 46-95 |
-| 6. Feature Importance | Importance × Actionability | Priority intervention targets |
-| 7-8. Agent Definitions | Multi-agent architecture | 5 agents + tools |
-| 9. A/B Testing | Multi-variant experiments | Winner: Call (53.2% lift) |
-| 10. Dashboard | Executive visualization | 6 key metrics |
+| 3. Modeling | ML Training, Survival, Feature Importance | AUC: 0.6622, Window: Day 46-95 |
+| 4. Model Evaluation | Performance metrics | Confusion matrix, C-Index: 0.6774 |
+| 5-6. Tool & Agent Definitions | Multi-agent architecture | 5 agents + tools |
+| 7-8. Infrastructure | Sessions, Memory, Observability | memory_store, metrics |
+| 9. Local Testing | Validate tools (intervention test requires Section 10) | Test results |
+| 10. A/B Testing | Multi-variant experiments | CHANNEL_EFFECTIVENESS, Winner: Call |
+| 11. Dashboard | Executive visualization | 6 key metrics |
+| 12-13. Deploy & Cleanup | Production deployment | Cloud configuration |
 
 ---
 
@@ -354,10 +355,10 @@ ROI is calculated using **absolute churn reduction** (not relative lift):
 
 | Channel | Rel. Lift | Abs. Δ | Cost | ROI | Best For |
 |---------|-----------|--------|------|-----|----------|
-| **Email** | 18.2% | 3.4pp | $0.50 | **127.9x** | All customers (scalable) |
+| **Email** | 18.2% | 3.5pp | $0.50 | **127.9x** | All customers (scalable) |
 | Discount | 31.2% | 6.0pp | $10.00 | 11.3x | Price-sensitive segments |
 | Call | 53.2% | 10.2pp | $35.00 | 5.5x | VIP customers |
-| Combined | 29.9% | 5.7pp | $45.50 | 2.4x | Critical + high-value |
+| Combined | 29.9% | 5.8pp | $45.50 | 2.4x | Critical + high-value |
 
 ### Recommended Tiered Strategy
 
