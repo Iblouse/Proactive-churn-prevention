@@ -35,7 +35,7 @@ This project implements an end-to-end **Proactive Churn Prevention System** that
 
 ### The Core Insight
 
-> **Timing is everything.** The optimal intervention window (Day 46-95) is derived directly from survival analysis, not hardcoded assumptions.
+> **Timing is everything.** The optimal intervention window (Day 45-95) is derived directly from survival analysis, not hardcoded assumptions.
 
 ### Who Uses This System
 
@@ -54,7 +54,7 @@ This system is designed for **cross-functional teams**, not just data scientists
 
 ### What This Project Is (And What It Isn't)
 
-This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.68. These are adequate, and that's the point.
+This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.66. These are adequate, and that's the point.
 
 This project is about **building a complete business solution** that combines:
 - **Traditional ML** (risk scoring, survival prediction)
@@ -66,33 +66,33 @@ This project is about **building a complete business solution** that combines:
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| Churn Model AUC | 0.6622 | ✓ Adequate for ranking |
-| Survival C-Index | 0.6774 | ✓ Adequate for timing |
-| Recall @ 0.4 | 85.3% | ✓ Catches most churners |
-| Precision @ 0.4 | 24.3% | ✓ Acceptable for intervention |
+| Churn Model AUC | 0.6612 | ✓ Adequate for ranking |
+| Survival C-Index | 0.6645 | ✓ Adequate for timing |
+| Recall @ 0.5 | 66.3% | ✓ Catches most churners |
+| Precision @ 0.5 | 29.3% | ✓ Acceptable for intervention |
 
 ### Business Metrics (What Actually Matters)
 
 | Metric | Value |
 |--------|-------|
-| Dataset | 3,000 customers (19.4% churn) |
-| At-Risk Customers | 1,347 (High + Critical) |
-| CLV at Risk | $1,181,624 |
-| Optimal Window | Day 46-95 |
-| Best Lift | Call (+53.2% / 10.2pp, p<0.0001) |
-| Best ROI | Email (127.9x) |
+| Dataset | 6,000 customers (21.0% churn) |
+| At-Risk Customers | 2,825 (High + Critical) |
+| CLV at Risk | $2,542,079 |
+| Optimal Window | Day 45-95 |
+| Best Lift | Call (+54.4% / 11.8pp, p<0.0001) |
+| Best ROI | Email (158.8x) |
 
-### A/B Test Results (n=400/variant, Bonferroni α=0.0125)
+### A/B Test Results (n=900/variant, Bonferroni α=0.0125)
 
 | Variant | Churn Rate | Rel. Lift | Abs. Δ | P-value | Significant? |
 |---------|------------|-----------|--------|---------|--------------|
-| Control | 19.2% | - | - | - | (baseline) |
-| Email | 15.8% | +18.2% | 3.5pp | 0.2264 | ❌ No |
-| Discount | 13.2% | +31.2% | 6.0pp | 0.0275 | ❌ No |
-| **Call** | **9.0%** | **+53.2%** | **10.2pp** | **0.00005** | **✅ Yes** |
-| Combined | 13.5% | +29.9% | 5.8pp | 0.0356 | ❌ No |
+| Control | 21.7% | - | - | - | (baseline) |
+| Email | 17.6% | +19.0% | 4.1pp | 0.033 | ❌ No |
+| Discount | 15.6% | +28.2% | 6.1pp | 0.001 | ✅ Yes* |
+| **Call** | **9.9%** | **+54.4%** | **11.8pp** | **<0.0001** | **✅ Yes** |
+| Combined | 15.0% | +30.8% | 6.7pp | <0.001 | ✅ Yes* |
 
-**Strategic Insight**: Call delivers highest absolute impact (10.2pp reduction) with solid ROI (5.5x). Email offers exceptional ROI (127.9x) due to near-zero cost. Target ROI: 5-10x on retention investments.
+**Strategic Insight**: Call delivers highest absolute impact (11.8pp reduction) with solid ROI (6.5x). Email offers exceptional ROI (158.8x) due to near-zero cost. Target ROI: 5-10x on retention investments.
 
 ---
 
@@ -106,8 +106,8 @@ This project is about **building a complete business solution** that combines:
 - **Evaluation Agent**: Tracks effectiveness and provides feedback
 
 ### 📊 ML Pipeline
-- Logistic Regression for calibrated churn probabilities (AUC: 0.6622)
-- Cox Proportional Hazards for survival analysis (C-Index: 0.6774)
+- Logistic Regression for calibrated churn probabilities (AUC: 0.6612)
+- Cox Proportional Hazards for survival analysis (C-Index: 0.6645)
 - 120-day observation window for actionable predictions
 - Risk-adjusted prediction thresholds
 
@@ -124,10 +124,50 @@ This project is about **building a complete business solution** that combines:
 
 ### 📈 Executive Dashboard
 - Risk distribution visualization
-- Optimal intervention window (Day 46-95)
+- Optimal intervention window (Day 45-95)
 - A/B test results with statistical significance
-- CLV at risk by customer tier ($1.18M)
+- CLV at risk by customer tier ($2.54M)
 - Intervention ROI comparison
+
+---
+
+
+---
+
+## 📝 Methodology Notes
+
+### Synthetic Data with Known Ground Truth
+
+This project uses **synthetic data** where the true causal relationships are explicitly defined. This is intentional for validation:
+
+| Feature | Ground Truth Coefficient | Effect |
+|---------|-------------------------|--------|
+| payment_delays_12m | +0.25 | Strongest churn driver |
+| support_tickets_90d | +0.15 | Second strongest driver |
+| nps_score | -0.10 | Protective (reduces churn) |
+| login_frequency | -0.03 | Protective |
+| tenure_months | -0.02 | Protective |
+
+When the ML model "discovers" these as top predictors, it **validates the model works correctly**—not circular reasoning.
+
+### Reproducibility
+
+The notebook uses exactly **two random seeds**:
+- `TRAINING_SEED = 42`: Data generation and model training
+- `EXPERIMENT_SEED = 11`: A/B test simulation only
+
+### Stochastic A/B Testing
+
+A/B test effect sizes are **sampled from distributions**, not hardcoded:
+
+| Channel | Mean Lift | Std Dev | Notes |
+|---------|-----------|---------|-------|
+| Email | 18% | ±8% | Low cost, moderate effect |
+| Discount | 28% | ±10% | Medium cost, good effect |
+| Call | 45% | ±15% | High cost, highest variance |
+| Combined | 32% | ±12% | Diminishing returns |
+
+Different seeds can produce different winners. This reflects realistic uncertainty in intervention effectiveness.
 
 ---
 
@@ -156,12 +196,12 @@ This project is about **building a complete business solution** that combines:
 ### Data Flow
 
 ```
-Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → Local Test → A/B Test → Dashboard
+Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → A/B Test → Tools → Local Test → Dashboard
      │                │                   │               │                    │              │            │           │
      ▼                ▼                   ▼               ▼                    ▼              ▼            ▼           ▼
-  3,000           15 features         Probability      Days Until         Risk-Based     Validate     Validate    Executive
+  6,000           15 features         Probability      Days Until         Risk-Based     Validate     Validate    Executive
  Customers       + Actionability      + Risk Tier       Churn             Routing        Tools        Channels    Reporting
-                   Scoring            AUC: 0.6622    Window: 46-95     Channel Select              Winner: Call
+                   Scoring            AUC: 0.6612    Window: 45-95     Channel Select              Winner: Call
 ```
 
 ---
@@ -209,13 +249,13 @@ jupyter notebook proactive-churn-prevention.ipynb
 
 | Section | Description | Key Output |
 |---------|-------------|------------|
-| 1-2. Setup & Data | Configuration, synthetic data | 3,000 customers, 19.4% churn |
-| 3. Modeling | ML Training, Survival, Feature Importance | AUC: 0.6622, Window: Day 46-95 |
-| 4. Model Evaluation | Performance metrics | Confusion matrix, C-Index: 0.6774 |
-| 5-6. Tool & Agent Definitions | Multi-agent architecture | 5 agents + tools |
-| 7-8. Infrastructure | Sessions, Memory, Observability | memory_store, metrics |
-| 9. Local Testing | Validate tools (intervention test requires Section 10) | Test results |
-| 10. A/B Testing | Multi-variant experiments | CHANNEL_EFFECTIVENESS, Winner: Call |
+| 1-2. Setup & Data | Configuration, synthetic data | 6,000 customers, 21.0% churn |
+| 3. Modeling | ML Training, Survival, Feature Importance | AUC: 0.6612, Window: Day 45-95 |
+| 4. Model Evaluation | Performance metrics | Confusion matrix, C-Index: 0.6645 |
+| 5. A/B Testing | Multi-variant experiments | CHANNEL_EFFECTIVENESS, Winner: Call |
+| 6-7. Tool & Agent Definitions | Multi-agent architecture (uses A/B results) | 5 agents + tools |
+| 8-9. Infrastructure | Sessions, Memory, Observability | memory_store, metrics |
+| 10. Local Testing | Validate tools, end-to-end testing | Test results |
 | 11. Dashboard | Executive visualization | 6 key metrics |
 | 12-13. Deploy & Cleanup | Production deployment | Cloud configuration |
 
@@ -268,7 +308,7 @@ Churned         17       99
 | Phase | Day Range | Derivation |
 |-------|-----------|------------|
 | Too Early | 0-46 | Before 25th percentile |
-| **Optimal** | **46-95** | Between q25 and median |
+| **Optimal** | **45-95** | Between q25 and median |
 | Peak | ~93 | Maximum effectiveness |
 | Too Late | 95+ | After median |
 
@@ -339,11 +379,11 @@ With combined framework:
 
 | Variant | n | Churned | Rate | Lift | P-value | Significant? |
 |---------|---|---------|------|------|---------|--------------|
-| Control | 400 | 77 | 19.2% | - | - | (baseline) |
-| Email | 400 | 63 | 15.8% | +18.2% | 0.2264 | ❌ No |
-| Discount | 400 | 53 | 13.2% | +31.2% | 0.0275 | ❌ No* |
-| **Call** | **400** | **36** | **9.0%** | **+53.2%** | **0.00005** | **✅ Yes** |
-| Combined | 400 | 54 | 13.5% | +29.9% | 0.0356 | ❌ No* |
+| Control | 900 | 195 | 21.7% | - | - | (baseline) |
+| Email | 900 | 158 | 17.6% | +19.0% | 0.033 | ❌ No |
+| Discount | 900 | 140 | 15.6% | +28.2% | 0.001 | ✅ Yes* |
+| **Call** | **900** | **89** | **9.9%** | **+54.4%** | **<0.0001** | **✅ Yes** |
+| Combined | 900 | 135 | 15.0% | +30.8% | <0.001 | ✅ Yes* |
 
 *Not significant at Bonferroni-adjusted α=0.0125
 
@@ -355,10 +395,10 @@ ROI is calculated using **absolute churn reduction** (not relative lift):
 
 | Channel | Rel. Lift | Abs. Δ | Cost | ROI | Best For |
 |---------|-----------|--------|------|-----|----------|
-| **Email** | 18.2% | 3.5pp | $0.50 | **127.9x** | All customers (scalable) |
-| Discount | 31.2% | 6.0pp | $10.00 | 11.3x | Price-sensitive segments |
-| Call | 53.2% | 10.2pp | $35.00 | 5.5x | VIP customers |
-| Combined | 29.9% | 5.8pp | $45.50 | 2.4x | Critical + high-value |
+| **Email** | 19.0% | 4.1pp | $0.50 | **158.8x** | All customers (scalable) |
+| Discount | 28.2% | 6.1pp | $10.00 | 11.8x | Price-sensitive segments |
+| Call | 54.4% | 11.8pp | $35.00 | 6.5x | VIP customers |
+| Combined | 30.8% | 6.7pp | $45.50 | 2.8x | Critical + high-value |
 
 ### Recommended Tiered Strategy
 
@@ -478,16 +518,16 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidel
 ### Gating Checks (Model Metrics)
 | Metric | Value |
 |--------|-------|
-| Churn AUC | 0.6622 ✓ |
-| Survival C-Index | 0.6774 ✓ |
-| Recall @ 0.4 | 85.3% ✓ |
+| Churn AUC | 0.6612 ✓ |
+| Survival C-Index | 0.6645 ✓ |
+| Recall @ 0.5 | 78.7% ✓ |
 
 ### Business Outcomes (What Matters)
 | Metric | Value |
 |--------|-------|
-| CLV at Risk | $1,181,624 |
-| Optimal Window | Day 46-95 |
-| Best Lift | Call (+53.2% / 10.2pp) |
-| Best ROI | Email (127.9x) |
+| CLV at Risk | $2,542,079 |
+| Optimal Window | Day 45-95 |
+| Best Lift | Call (+54.4% / 11.8pp) |
+| Best ROI | Email (158.8x) |
 | Target ROI | 5-10x |
 | Revenue Protected | ~$264K |

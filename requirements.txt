@@ -13,3 +13,6 @@ nest_asyncio
 kaleido>=1.0.0
 plotly>=6.1.1
 nbformat>=4.2.0
+dotenv
+google-generativeai
+ipywidgets
