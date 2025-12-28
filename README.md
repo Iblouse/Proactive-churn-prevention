@@ -1,5 +1,7 @@
 # 🚀 Proactive Churn Prevention Multi-Agent System
 
+![Risk Distribution](viz/02_executive_dashboard.png)
+
 > Transform reactive customer retention into proactive churn prevention with ML-powered predictions and AI-orchestrated interventions.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -35,7 +37,7 @@ This project implements an end-to-end **Proactive Churn Prevention System** that
 
 ### The Core Insight
 
-> **Timing is everything.** The optimal intervention window (Day 45-95) is derived directly from survival analysis, not hardcoded assumptions.
+> **Timing is everything.** The optimal intervention window (Day 45-95) is derived directly from survival analysis.
 
 ### Who Uses This System
 
