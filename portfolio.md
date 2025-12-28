@@ -365,7 +365,7 @@ The window boundaries come from the survival model's predictions:
 
 The difference between optimal and suboptimal timing is substantial. For our 2,825 high-risk customers with $2.54M CLV at risk:
 
-![Business Impact of Timing](06_business_impact_timing.png)
+![Business Impact of Timing](viz/07_revenue_impact.png)
 
 *Figure 5: Revenue impact comparison across intervention timing windows*
 
@@ -484,7 +484,7 @@ I implemented 5-arm testing to compare intervention channels:
 
 ### Results
 
-![A/B Test Results](03_ab_test_results.png)
+![A/B Test Results](viz/08_ab_test_results.png)
 
 *Figure 6: Churn rates by intervention variant (n=900 per group)*
 
