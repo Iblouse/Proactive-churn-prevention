@@ -74,7 +74,7 @@ Our analysis of 6,000 customers revealed the following risk distribution:
 | High | 1,275 | 42.5% | 50-74% |
 | Critical | 72 | 2.4% | ≥75% |
 
-![Risk Distribution](01_risk_distribution.png)
+![Risk Distribution](viz/01_risk_distribution.png)
 
 *Figure 1: Customer segmentation by churn risk tier (n=6,000)*
 
@@ -125,7 +125,7 @@ From our Cox Proportional Hazards model, we observed the actual churn timing dis
 | 75th Percentile | 88 |
 | Maximum | 119 |
 
-![Survival Curves](08_survival_curves.png)
+![Survival Curves](viz/02_survival_curves.png)
 
 *Figure 2: Survival probability over the 120-day observation window*
 
@@ -181,7 +181,7 @@ I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the b
 | 0.6 | 35.4% | 48.4% | 0.409 |
 | 0.7 | 45.9% | 26.6% | 0.337 |
 
-![Threshold Analysis](07_threshold_analysis.png)
+![Threshold Analysis](viz/03_threshold_analysis.png)
 
 *Figure 3: Precision-Recall trade-off across classification thresholds*
 
@@ -279,7 +279,7 @@ Combined Score = |Coefficient| × Actionability Multiplier
 
 Where: High = 3.0, Medium = 2.0, Low = 1.0
 
-![Feature Importance vs Actionability](09_feature_actionability.png)
+![Feature Importance vs Actionability](viz/04_feature_importance_comparison.png)
 
 *Figure: Traditional feature importance (left) vs. business-focused combined scoring (right)*
 
@@ -297,7 +297,7 @@ Where: High = 3.0, Medium = 2.0, Low = 1.0
 
 ### Feature Selection Matrix
 
-![Feature Selection Matrix](10_feature_selection_matrix.png)
+![Feature Selection Matrix](viz/05_four_quadrant_matrix.png)
 
 *Figure: Four-quadrant matrix for prioritizing intervention targets*
 
@@ -347,7 +347,7 @@ Rather than hardcoding intervention timing, I calculated windows directly from s
 - **Peak Effectiveness**: ~Day 93
 - **Too Late**: After Day 95
 
-![Intervention Window](02_intervention_window.png)
+![Intervention Window](viz/06_intervention_timing.png)
 
 *Figure 4: Intervention success rate by timing, with optimal window (Day 45-95) highlighted*
 
