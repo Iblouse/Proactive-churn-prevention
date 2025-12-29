@@ -504,7 +504,7 @@ I implemented 5-arm testing to compare intervention channels:
 
 While Call delivers the highest lift, ROI tells a different story:
 
-![Intervention ROI](04_intervention_roi.png)
+![Intervention ROI](viz/10_lift_vs_roi.png)
 
 *Figure 7: ROI by intervention channel, calculated as (avg_CLV × absolute_reduction) / cost*
 
@@ -778,6 +778,8 @@ The model's AUC is 0.66. That's fine. What matters is:
 - The system is **usable by CS, Marketing, and Product teams**, not just data scientists
 
 This is what applied ML looks like: adequate models, rigorous experimentation, measurable outcomes.
+
+![Executive Summary](viz/Executive_summary.png)
 
 ---
 
