@@ -1,7 +1,5 @@
 # 🚀 Proactive Churn Prevention Multi-Agent System
 
-![Risk Distribution](viz/02_executive_dashboard.png)
-
 > Transform reactive customer retention into proactive churn prevention with ML-powered predictions and AI-orchestrated interventions.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -56,7 +54,7 @@ This system is designed for **cross-functional teams**, not just data scientists
 
 ### What This Project Is (And What It Isn't)
 
-This is **not** a model optimization exercise. The AUC is 0.66. The C-Index is 0.66. These are adequate, and that's the point.
+This is not a model-optimization exercise. I used default settings rather than spending time on hyperparameter tuning or leaderboard metrics. Performance is adequate for the goal (recall 0.66, AUC 0.66, C-index 0.66), and that is intentional.
 
 This project is about **building a complete business solution** that combines:
 - **Traditional ML** (risk scoring, survival prediction)
@@ -125,6 +123,7 @@ This project is about **building a complete business solution** that combines:
 - ROI-based channel recommendations
 
 ### 📈 Executive Dashboard
+![Risk Distribution](viz/02_executive_dashboard.png)
 - Risk distribution visualization
 - Optimal intervention window (Day 45-95)
 - A/B test results with statistical significance
@@ -225,7 +224,7 @@ pip install google-genai google-adk  # For agent functionality
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/churn-prevention-agents.git
+git clone https://github.com/Iblouse/churn-prevention-agents.git
 cd churn-prevention-agents
 ```
 
@@ -306,7 +305,7 @@ Churned         17       99
 | has_payment_issues | 1.077 | 7.7% higher churn hazard |
 
 **Optimal Intervention Window:**
-
+![Intervention Window](viz/06_intervention_timing.png)
 | Phase | Day Range | Derivation |
 |-------|-----------|------------|
 | Too Early | 0-46 | Before 25th percentile |
@@ -481,8 +480,8 @@ Identify Risk → Predict Timing → Select Intervention → Test → Measure �
 churn-prevention-agents/
 ├── proactive-churn-prevention.ipynb    # Main notebook
 ├── README.md                            # This file
-├── blog_post_corrected.md              # Technical blog post
-├── flowchart.mermaid                    # Architecture diagrams
+├── portfolio.md              # Technical blog post
+├── flowchart.md                    # Architecture diagrams
 ├── requirements.txt                     # Dependencies
 ├── charts/
 │   ├── 01_risk_distribution.png
@@ -503,11 +502,6 @@ churn-prevention-agents/
 
 MIT License - see [LICENSE](LICENSE) for details.
 
----
-
-## 🤝 Contributing
-
-Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
