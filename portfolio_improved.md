@@ -23,7 +23,7 @@ The optimal intervention window (Day 45-95) is derived directly from survival an
 
 ### What This Project Is (And What It Isn't)
 
-This is **not** a model optimization exercise. I did not spend weeks tuning hyperparameters or chasing leaderboard metrics. The AUC is 0.66. The C-Index is 0.66. These are adequate for the task, and that's the point.
+This is **not** a model-optimization exercise. I used default settings rather than spending time on hyperparameter tuning or leaderboard metrics. Performance is adequate for the goal (recall 0.66, AUC 0.66, C-index 0.66), and that is intentional.
 
 This project is about **building a complete business solution** that combines multiple disciplines:
 
@@ -107,15 +107,15 @@ Model metrics validate whether predictions are reliable enough to act on. They'r
 
 - **AUC-ROC: 0.6612** (better than random 0.5, adequate for prioritization)
 - **Best threshold**: 0.5 (by F1 score)
-- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406
+- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406 | **AUC**: 66.12%
 
 I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the business value lies. The model's job is to **rank customers by risk**, and 0.66 is sufficient. The real question is: *does acting on these predictions improve retention?* That's what the A/B tests answer.
 
 ![Threshold Analysis](viz/03_threshold_analysis.png)
 
-*Figure 3: Precision-Recall trade-off across classification thresholds. Threshold 0.5 selected for optimal F1 balance.*
+*Figure 3: Precision–recall trade-off across classification thresholds. Because the priority is identifying as many churners as possible, we should optimize for recall. Although 0.4 performs better for recall, AUC and F1, we use 0.5 for simplicity and reader familiarity.*
 
-**Business Decision**: I selected threshold = 0.5 because false positives (contacting satisfied customers) have low cost compared to missing churners.
+**Business Decision**: Since the goal is churn prevention, prioritizing recall is appropriate to reduce false negatives, because missing likely churners is costly.
 
 ### Model 2: Survival Analysis
 
@@ -157,6 +157,7 @@ Where: High = 3.0, Medium = 2.0, Low = 1.0
 
 *Figure 4: Traditional feature importance (left) vs. business-focused combined scoring (right). Engagement_score becomes the #1 intervention target because it combines prediction power with high actionability.*
 
+### Priority Matrix
 ![Feature Selection Matrix](viz/05_four_quadrant_matrix.png)
 
 *Figure 5: Four-quadrant matrix for prioritizing intervention targets. Priority Targets (upper-right) have both high importance and high actionability.*
