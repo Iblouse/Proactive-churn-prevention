@@ -107,13 +107,13 @@ Model metrics validate whether predictions are reliable enough to act on. They'r
 
 - **AUC-ROC: 0.6612** (better than random 0.5, adequate for prioritization)
 - **Best threshold**: 0.5 (by F1 score)
-- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406 | **AUC**: 66.12%
+- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406
 
 I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the business value lies. The model's job is to **rank customers by risk**, and 0.66 is sufficient. The real question is: *does acting on these predictions improve retention?* That's what the A/B tests answer.
 
 ![Threshold Analysis](viz/03_threshold_analysis.png)
 
-*Figure 3: Precision–recall trade-off across classification thresholds. Because the priority is identifying as many churners as possible, we should optimize for recall. Although 0.4 performs better for recall, AUC and F1, we use 0.5 for simplicity and reader familiarity.*
+*Figure 3: Precision-recall trade-off across classification thresholds. Because the priority is identifying as many churners as possible, we should optimize for recall. Although 0.4 performs better for recall, AUC and F1, we use 0.5 for simplicity and reader familiarity.*
 
 **Business Decision**: Since the goal is churn prevention, prioritizing recall is appropriate to reduce false negatives, because missing likely churners is costly.
 
@@ -302,9 +302,9 @@ Here's how the system handles a **Critical-risk customer**:
 {
   "intervention_channel": "Combined",
   "priority": "Immediate",
-  "expected_lift": 29.9%,
-  "intervention_cost": $45.50,
-  "roi_estimate": 2.4x,
+  "expected_lift": "29.9%",
+  "intervention_cost": "$45.50",
+  "roi_estimate": "2.4x",
   "optimal_contact_window": "Day 45-58 (act now)"
 }
 ```

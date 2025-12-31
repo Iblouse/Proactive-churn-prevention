@@ -4,24 +4,47 @@
 
 ---
 
-> **"Your best model is worthless if it can't tell you when to act."**
+> **"Your best model is worthless if it cannot tell you when to act."**
 >
-> I built a system that reduced churn by 54% and protected $2.54M in revenue. Not by chasing a higher AUC, but by answering the question most ML projects ignore: *When exactly should we intervene?*
+> I built a churn prevention system that identifies $2.54M in customer lifetime value at risk, recommends when and how to intervene, and estimates ~$264K protected in a simulated A/B test. The core question is simple: *When exactly should we intervene?*
 
 ---
 
 ## Executive Summary
 
-This project demonstrates that **when** you intervene matters as much as **whether** you intervene. By combining survival analysis with multi-agent AI, I built a system that:
+This portfolio focuses on the part most churn models skip: turning predictions into an intervention plan. By combining risk scoring, survival analysis, decision logic, and experiment design, I built a system that:
 
 - Identifies at-risk customers **45-95 days before churn** (the optimal intervention window)
-- Achieves a **54.4% reduction in churn** with the best-performing intervention channel
-- Protects **$2.54M in customer lifetime value** across 2,825 high-risk customers
-- Delivers statistically significant results (p < 0.0001) validated through rigorous A/B testing
+- Shows a **54.4% relative reduction in churn** for the top channel in a simulated A/B test (p < 0.0001)
+- Identifies **$2.54M in customer lifetime value at risk** across 2,825 high-risk customers
+- Estimates **~$264K protected** in simulation (based on incremental customers saved and CLV)
+- Uses a **5-arm A/B testing workflow** with Bonferroni correction to estimate lift and ROI by channel
 
-The optimal intervention window (Day 45-95) is derived directly from survival analysis of high-risk customer predictions, not hardcoded assumptions.
+The optimal intervention window (Day 45-95) is derived from survival predictions on the at-risk cohort, not from a fixed rule.
 
-### What This Project Is (And What It Isn't)
+### Read This in 30 Seconds
+
+- **Problem**: Reduce churn with a limited outreach budget. A risk score alone does not tell teams **when** to intervene.
+- **Solution**: A two-model timing engine (risk scoring plus survival analysis) plus decision logic that maps risk, timing, and value to the right channel.
+- **Validation**: A simulated 5-arm A/B test workflow (with Bonferroni correction) to estimate both **lift** and **ROI** by channel.
+- **Highlights**: Optimal window Day 45-95. Best lift from Call (+54.4% relative reduction, p < 0.0001). Best ROI from Email (158.8x).
+
+
+### Links
+
+- **Code and notebook**: (add GitHub repository link)
+- **Notebook HTML or Kaggle**: (add link)
+- **Write-up**: (this page)
+
+
+### One-Page Executive Dashboard
+
+![Executive Dashboard](viz/02_executive_dashboard.png)
+
+*Executive dashboard summarizing risk distribution, optimal timing window, recommended channel mix, and estimated impact.*
+
+
+### What This Project Is (And What It Is not)
 
 This is **not** a model-optimization exercise. I used default settings rather than spending time on hyperparameter tuning or leaderboard metrics. Performance is adequate for the goal (recall 0.66, AUC 0.66, C-index 0.66), and that is intentional.
 
@@ -50,7 +73,7 @@ Our analysis of 6,000 customers revealed a concerning distribution: nearly half 
 
 *Figure 1: Customer segmentation by churn risk tier (n=6,000). Nearly 47% of customers (2,825) fall into High or Critical risk tiers, representing $2.54M in CLV exposure.*
 
-With a mean Customer Lifetime Value of **$1,931** and an overall churn rate of **21.0%**, this isn't an abstract ML problem. It's a revenue protection challenge with concrete dollar amounts.
+With a mean Customer Lifetime Value of **$1,931** and an overall churn rate of **21.0%**, this is not an abstract ML problem. It is a revenue protection challenge with concrete dollar amounts.
 
 ---
 
@@ -58,7 +81,7 @@ With a mean Customer Lifetime Value of **$1,931** and an overall churn rate of *
 
 Most churn prevention systems answer: "Will this customer churn?" 
 
-That's the wrong question.
+That is the wrong question.
 
 The right question is: **"When will this customer churn, and when should we intervene?"**
 
@@ -103,17 +126,17 @@ I implemented a dual-model approach:
 
 **Gating Check: Is the model good enough to proceed?**
 
-Model metrics validate whether predictions are reliable enough to act on. They're a gating check, not the goal.
+Model metrics validate whether predictions are reliable enough to act on. They are a gating check, not the goal.
 
 - **AUC-ROC: 0.6612** (better than random 0.5, adequate for prioritization)
 - **Best threshold**: 0.5 (by F1 score)
-- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406 | **AUC**: 66.12%
+- **Recall @ 0.5**: 66.3% | **Precision**: 29.3% | **F1**: 0.406
 
-I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the business value lies. The model's job is to **rank customers by risk**, and 0.66 is sufficient. The real question is: *does acting on these predictions improve retention?* That's what the A/B tests answer.
+I did not spend time pushing AUC from 0.66 to 0.75 because that is not where the business value lies. The model's job is to **rank customers by risk**, and 0.66 is sufficient. The real question is: *does acting on these predictions improve retention?* That is what the A/B tests answer.
 
 ![Threshold Analysis](viz/03_threshold_analysis.png)
 
-*Figure 3: Precision–recall trade-off across classification thresholds. Because the priority is identifying as many churners as possible, we should optimize for recall. Although 0.4 performs better for recall, AUC and F1, we use 0.5 for simplicity and reader familiarity.*
+*Figure 3: Precision-recall trade-off across classification thresholds. Because the priority is identifying as many churners as possible, we should optimize for recall. Although 0.4 performs better for recall, AUC and F1, we use 0.5 for simplicity and reader familiarity.*
 
 **Business Decision**: Since the goal is churn prevention, prioritizing recall is appropriate to reduce false negatives, because missing likely churners is costly.
 
@@ -135,11 +158,11 @@ I didn't spend time pushing AUC from 0.66 to 0.75 because that's not where the b
 
 ## Part 3: From Prediction to Action (The Actionability Gap)
 
-This is a critical insight that separates academic ML from business-impactful ML: **the best predictors aren't always the best intervention targets.**
+This is a critical insight that separates academic ML from business-impactful ML: **the best predictors are not always the best intervention targets.**
 
 ### The Actionability Problem
 
-Our strongest predictor is `tenure_months` (coefficient = -0.50), but we can't change how long a customer has been with us. It's useful for prediction but useless for intervention.
+Our strongest predictor is `tenure_months` (coefficient = -0.50), but we cannot change how long a customer has been with us. It is useful for prediction but useless for intervention.
 
 Features like `engagement_score` have smaller coefficients but **high actionability**. We can directly influence them through product tours, email campaigns, and feature education.
 
@@ -198,7 +221,7 @@ With predictions in hand, the next challenge is operationalizing at scale. I bui
 
 ### Why Agents?
 
-A model in a notebook doesn't save customers. The value comes from:
+A model in a notebook does not save customers. The value comes from:
 - **Automated routing**: Right intervention to right customer at right time
 - **Decision support**: CS teams get recommendations, not just scores
 - **Scalability**: Handle thousands of at-risk customers without manual triage
@@ -231,7 +254,7 @@ A model in a notebook doesn't save customers. The value comes from:
 
 Model predictions are hypotheses. A/B tests are proof.
 
-> **Methodology Note**: This section demonstrates A/B testing methodology using simulated outcomes with industry-benchmark effect sizes. The statistical framework (chi-square tests, Bonferroni correction, ROI calculation) is production-ready.
+> **Methodology Note**: Outcomes are simulated in this portfolio to demonstrate the full A/B testing workflow. The experimental design, statistical testing, and ROI calculation are production-ready once connected to real retention outcomes.
 
 ### Multi-Variant Experiment Design
 
@@ -269,7 +292,7 @@ Based on A/B results, the intervention agent uses this mapping:
 | Critical + Standard | Call | High-touch for urgent cases |
 | High + Payment Issues | Discount | Address price sensitivity |
 | High/Medium | Email | Cost-effective coverage |
-| Low | Monitor only | ROI doesn't justify intervention |
+| Low | Monitor only | ROI does not justify intervention |
 
 ---
 
@@ -302,9 +325,9 @@ Here's how the system handles a **Critical-risk customer**:
 {
   "intervention_channel": "Combined",
   "priority": "Immediate",
-  "expected_lift": 29.9%,
-  "intervention_cost": $45.50,
-  "roi_estimate": 2.4x,
+  "expected_lift": "29.9%",
+  "intervention_cost": "$45.50",
+  "roi_estimate": "2.4x",
   "optimal_contact_window": "Day 45-58 (act now)"
 }
 ```
@@ -366,9 +389,9 @@ Here's how the system handles a **Critical-risk customer**:
 
 ## Conclusion
 
-Customer churn prevention isn't about building the best classifier. It's about building a **system that improves retention**.
+Customer churn prevention is not about building the best classifier. It is about building a **system that improves retention**.
 
-The model's AUC is 0.66. That's fine. What matters is:
+The model's AUC is 0.66. That is fine. What matters is:
 - The optimal window (Day 45-95) is **derived from data**, not assumed
 - The winning channel (Call, +54.4% lift) is **validated by experiment**, not guessed
 - The ROI (6.5x-158.8x) is **calculated from A/B test data**, not hoped for
