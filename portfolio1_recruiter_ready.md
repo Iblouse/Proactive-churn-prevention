@@ -229,15 +229,20 @@ A model in a notebook does not save customers. The value comes from:
 
 ### Agent Architecture
 
-```
-                    ORCHESTRATOR AGENT
-        (Coordinates workflow, manages communication)
-                          |
-        +-----------------+-----------------+
-        |                 |                 |
-   BEHAVIORAL       PREDICTIVE       INTERVENTION       EVALUATION
-     AGENT            AGENT             AGENT             AGENT
-```
+```mermaid
+  graph TD
+    Orchestrator[Orchestrator Agent] --> Behavioral[Behavioral Agent]
+    Orchestrator --> Predictive[Predictive Agent]
+    Orchestrator --> Intervention[Intervention Agent]
+    Orchestrator --> Evaluation[Evaluation Agent]
+    
+    Behavioral -->|Signals| Orchestrator
+    Predictive -->|Scores| Orchestrator
+    Intervention -->|Channel| Orchestrator
+    Evaluation -->|Feedback| Orchestrator
+    
+    style Orchestrator fill:#006600,stroke:#333,stroke-width:2px
+```      
 
 | Agent | Function |
 |-------|----------|
@@ -398,8 +403,6 @@ The model's AUC is 0.66. That is fine. What matters is:
 - The system is **usable by CS, Marketing, and Product teams**, not just data scientists
 
 This is what applied ML looks like: adequate models, rigorous experimentation, measurable outcomes.
-
-![Executive Summary](viz/Executive_summary.png)
 
 ---
 
