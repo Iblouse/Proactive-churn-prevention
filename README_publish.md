@@ -191,30 +191,25 @@ Different seeds can produce different winners. This reflects realistic uncertain
 
 ---
 
-## 🏗 Architecture
+## 🏗 Agent Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ORCHESTRATOR AGENT                           │
-│         (Coordinates workflow, manages communication)           │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │
-        ┌─────────────┼─────────────┬─────────────┐
-        ▼             ▼             ▼             ▼
-┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
-│ BEHAVIORAL│  │ PREDICTIVE│  │INTERVENTION│ │ EVALUATION│
-│   AGENT   │  │   AGENT   │  │   AGENT    │ │   AGENT   │
-│           │  │           │  │            │ │           │
-│  Tools:   │  │  Tools:   │  │   Tools:   │ │  Tools:   │
-│ •Behavior │  │ •Churn    │  │ •Recommend │ │ •Survival │
-│  Monitor  │  │  Score    │  │  Interv.   │ │  Analysis │
-│           │  │ •Survival │  │ •Behavior  │ │ •At-Risk  │
-│           │  │  Analysis │  │  Monitor   │ │  List     │
-└───────────┘  └───────────┘  └───────────┘  └───────────┘
-```
+```mermaid
+  graph TD
+    Orchestrator[Orchestrator Agent] --> Behavioral[Behavioral Agent]
+    Orchestrator --> Predictive[Predictive Agent]
+    Orchestrator --> Intervention[Intervention Agent]
+    Orchestrator --> Evaluation[Evaluation Agent]
+    
+    Behavioral -->|Signals| Orchestrator
+    Predictive -->|Scores| Orchestrator
+    Intervention -->|Channel| Orchestrator
+    Evaluation -->|Feedback| Orchestrator
+    
+    style Orchestrator fill:#006600,stroke:#333,stroke-width:2px
+```      
 
 ### Data Flow
-
+[Flowchart](https://github.com/Iblouse/Proactive-churn-prevention/blob/main/flowchart.md)
 ```
 Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → A/B Test → Tools → Local Test → Dashboard
      │                │                   │               │                    │              │            │           │
