@@ -4,21 +4,17 @@
 
 ---
 
-## The Realization
+## The Pattern I Keep Seeing
 
-Three weeks into this project, I had a working churn classifier. AUC of 0.66. Nothing spectacular, but serviceable.
+After a decade of building ML systems, I've noticed something about churn projects.
 
-Then I tried to actually *use* it.
+We spend weeks optimizing classifiers. We celebrate AUC improvements. We hand over ranked lists of at-risk customers.
 
-"Customer #4,721 has a 78% churn probability."
+Then the business team asks: "Great, but when should we actually call them?"
 
-Great. Now what? Call them tomorrow? Next week? Wait until they show more warning signs?
+And the model has no answer. It was never designed to.
 
-The model couldn't tell me. It was never designed to.
-
-That's when I realized I'd spent three weeks answering the wrong question. Classification tells you WHO will churn. It doesn't tell you WHEN to do something about it.
-
-This notebook is my attempt to fix that.
+For this portfolio project, I wanted to demonstrate what a complete solution looks like - one that answers not just WHO will churn, but WHEN to intervene, WHAT channel works, and WHETHER it's worth the cost.
 
 ---
 
@@ -317,14 +313,14 @@ This is the kind of thinking that Kaggle competitions don't teach, but real-worl
 
 ## Final Thought
 
-I could have spent another month pushing AUC from 0.66 to 0.75.
+After years of building these systems, I've learned that the model is rarely the bottleneck.
 
-Instead, I asked better questions:
+The bottleneck is asking the right questions:
 - When should we act?
 - What intervention works?
 - Is it worth the cost?
 
-The "mediocre" model, embedded in a thoughtful system, protected ~$264K in simulated revenue.
+A "mediocre" model embedded in a thoughtful system protected ~$264K in simulated revenue.
 
 That's the difference between building models and solving problems.
 

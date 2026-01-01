@@ -6,19 +6,15 @@
 
 ---
 
-I spent three weeks building a churn model.
+After 10+ years building ML systems, I've noticed a pattern.
 
-AUC of 0.66. Decent accuracy. I could flag high-risk customers.
+We optimize classifiers, tune hyperparameters, celebrate AUC improvements. Then we hand over a ranked list of at-risk customers and the business team asks:
 
-Then I asked myself: "Customer #4,721 has a 78% churn probability. Now what? Do I call them tomorrow? Next week? Next month?"
+"Great, but when should we actually call them?"
 
-I had no idea.
+Most churn models can't answer that. They tell you WHO will leave, not WHEN to intervene.
 
-That's when I realized I'd answered the wrong question.
-
-Knowing WHO will churn is useless if you don't know WHEN to intervene.
-
-So I rebuilt the entire approach for this portfolio project:
+For this portfolio project, I decided to solve both problems properly.
 
 **The insight:**
 I added survival analysis (Cox Proportional Hazards) to predict timing, not just probability. It revealed something fascinating - there's a specific window where intervention works best.
@@ -68,9 +64,11 @@ Full project with code: [link in comments]
 
 Unpopular opinion: Your churn model's AUC doesn't matter.
 
-Mine was 0.66. "Mediocre" by Kaggle standards.
+After 10+ years in ML, I've seen teams celebrate 0.85 AUC scores that never moved the retention needle.
 
-But here's what I've learned building this portfolio project:
+For this portfolio project, my AUC was 0.66. "Mediocre" by Kaggle standards.
+
+But here's what experience has taught me:
 
 The model's job is to RANK customers by risk. 0.66 does that fine.
 
@@ -161,11 +159,11 @@ Full code and methodology in my portfolio.
 ---
 
 **Slide 1:**
-I spent 3 weeks building a churn model.
+After 10+ years in ML, I keep seeing the same mistake.
 
-Then I realized I'd answered the wrong question.
+We build churn models that answer the wrong question.
 
-Here's what I learned...
+Here's what I mean...
 
 **Slide 2:**
 THE WRONG QUESTION:

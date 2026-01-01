@@ -1,24 +1,18 @@
-# Why Your Churn Model is Solving the Wrong Problem (And How to Fix It)
+# Why Most Churn Models Solve the Wrong Problem (And How to Fix It)
 
-*A portfolio project that changed how I think about applied machine learning*
+*Lessons from a decade of building ML systems that actually get used*
 
 ---
 
-Three weeks into building a churn model, I had what I thought was a working solution.
+I've built churn models for over a decade now. Different industries, different scales, different algorithms. The technical part is straightforward - train a classifier, optimize the threshold, validate on held-out data.
 
-The classifier was trained. AUC of 0.66 - not spectacular, but reasonable. I could identify high-risk customers with decent accuracy. The feature importance plot looked sensible. The confusion matrix was within acceptable bounds.
+But here's what I've noticed: the model is rarely the problem.
 
-Then I tried to actually use it.
+The problem is that classification models answer the wrong question. They tell you WHO will churn. They don't tell you WHEN to intervene. And that gap between prediction and action is where most retention efforts fall apart.
 
-"Customer #4,721 has a 78% churn probability."
+For this portfolio project, I wanted to demonstrate what a complete solution looks like - one that bridges that gap with survival analysis, A/B testing, and ROI modeling.
 
-Okay... now what?
-
-Do I call them tomorrow? Send an email next week? Wait for more warning signs? The model couldn't tell me. It was never designed to answer that question.
-
-That's when I realized: **I had built a model that told me WHO would leave, but not WHEN to do something about it.**
-
-This article is about what I built next - and the lessons I learned about what "applied ML" really means.
+Here's the approach, and what it reinforces about applied ML.
 
 ---
 
@@ -230,15 +224,15 @@ This is the gap between academic ML and applied ML. In a Kaggle competition, you
 
 ---
 
-## What I Learned
+## What This Project Reinforces
 
 ![Executive Summary](viz/Executive_summary.png)
 
-Building this system taught me several lessons I'll carry forward:
+Building this system reinforced several principles I've come to value over my career:
 
 ### 1. Model metrics are gates, not goals
 
-My AUC was 0.66. "Mediocre" by competition standards. But the model's job was to *rank* customers by risk, and 0.66 does that fine. The real validation came from the A/B test - did acting on predictions actually improve retention?
+The AUC was 0.66. "Mediocre" by competition standards. But the model's job was to *rank* customers by risk, and 0.66 does that fine. The real validation came from the A/B test - did acting on predictions actually improve retention?
 
 I stopped optimizing when the model was "good enough" and focused on the questions that actually mattered.
 
@@ -283,17 +277,17 @@ For my simulated 6,000 customer dataset:
 
 ## Final Thought
 
-Here's what I wish someone had told me earlier in my career:
+Here's what a decade of applied ML has taught me:
 
 **Predicting churn is easy. Preventing it is hard.**
 
-Anyone can build a classifier. The hard part is answering the operational questions:
+Prevention requires answering questions that classification models weren't designed for:
 - When should we act?
 - What intervention works?
 - Is it worth the cost?
 - Which features can we actually influence?
 
-Those questions require more than a good model. They require good thinking.
+Those questions require more than a good model. They require a complete system - and the experience to know which questions to ask in the first place.
 
 The model's AUC was 0.66. The system protected $264K.
 

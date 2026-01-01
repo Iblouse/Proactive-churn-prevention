@@ -1,22 +1,20 @@
-# The Question That Changed How I Think About Churn Prediction
+# The Question Most Churn Models Can't Answer
 
-*I was three weeks into building a churn model when I realized I was solving the wrong problem.*
+*After a decade in ML, I've learned that the best models often solve the wrong problem.*
 
 ---
 
-I remember the exact moment it clicked.
+I've built dozens of churn models over the years. Different industries, different scales, different tech stacks. The pattern is always the same: train a classifier, optimize the threshold, hand over a ranked list of at-risk customers.
 
-I had just finished tuning my churn classifier. AUC of 0.66. Not spectacular, but decent. I could identify high-risk customers with reasonable accuracy. I was ready to call it done.
+And every single time, the business teams ask the same question: **"Great, but when should we actually reach out?"**
 
-Then I asked myself a simple question: **"Okay, so customer #4,721 has a 78% chance of churning. Now what?"**
+For years, I didn't have a good answer.
 
-Do I call them tomorrow? Next week? Next month?
+The classifier tells you WHO will churn. It doesn't tell you WHEN to intervene. And that gap - between prediction and action - is where most churn prevention efforts fall apart.
 
-I had no idea.
+For this portfolio project, I decided to finally solve that problem properly. Not just build another classifier, but build a complete system that answers the questions business teams actually need answered.
 
-And that's when I realized: I had built a model that could tell me *who* would leave, but not *when* to do something about it. I had answered the easy question and ignored the one that actually matters.
-
-This portfolio project is the story of how I fixed that - and what I learned along the way.
+Here's what I built - and what it taught me about the difference between predicting churn and preventing it.
 
 ---
 
@@ -162,9 +160,9 @@ This is the kind of nuanced thinking that a single "best model" can't give you. 
 
 ---
 
-## What I Learned
+## What This Project Reinforced
 
-Building this system taught me several lessons I'll carry into future projects:
+Building this system reinforced several principles I've come to appreciate over my career:
 
 **1. The question matters more than the model.**
 
