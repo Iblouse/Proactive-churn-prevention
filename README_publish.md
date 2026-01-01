@@ -6,6 +6,12 @@
 [![Google ADK](https://img.shields.io/badge/Google%20ADK-v1.0.0+-green.svg)](https://cloud.google.com/vertex-ai/docs/generative-ai/agent-builder/agent-development-kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+
+**Recruiter Summary**
+- Goal: prevent churn by combining risk scoring, time to churn forecasting, and action selection with A/B testing.
+- Data: 6,000 synthetic customers with known churn drivers and outcomes for verifiable evaluation.
+- Results: $2.54M CLV at risk identified; optimal intervention window Day 45-95; best lift from calls (+54.4% / 11.8pp, p<0.0001); best ROI from email (158.8x).
+
 ---
 
 ## 📋 Table of Contents
@@ -72,6 +78,8 @@ This project is about **building a complete business solution** that combines:
 | Precision @ 0.5 | 29.3% | ✓ Acceptable for intervention |
 
 ### Business Metrics (What Actually Matters)
+Data is synthetic with defined churn drivers and outcomes, which enables objective validation and controlled A/B simulations.
+
 
 | Metric | Value |
 |--------|-------|
@@ -160,7 +168,7 @@ This project uses **synthetic data** where the true causal relationships are exp
 | login_frequency | -0.03 | Protective |
 | tenure_months | -0.02 | Protective |
 
-When the ML model "discovers" these as top predictors, it **validates the model works correctly**—not circular reasoning.
+When the ML model "discovers" these as top predictors, it **validates the model works correctly**, not circular reasoning.
 
 ### Reproducibility
 
@@ -495,7 +503,7 @@ churn-prevention-agents/
 ├── portfolio.md              # Technical blog post
 ├── flowchart.md                    # Architecture diagrams
 ├── requirements.txt                     # Dependencies
-├── charts/
+├── viz/
 │   ├── 01_risk_distribution.png
 │   ├── 02_intervention_window.png
 │   ├── 03_ab_test_results.png
@@ -517,7 +525,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with care using Google ADK, Vertex AI, and modern ML best practices*.*
+*Built with care using Google ADK, Vertex AI, and reproducible evaluation gates.*
 
 ---
 
