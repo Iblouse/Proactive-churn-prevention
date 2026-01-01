@@ -10,11 +10,11 @@ And every single time, the business teams ask the same question: **"Great, but w
 
 For years, I didn't have a good answer.
 
-The classifier tells you WHO will churn. It doesn't tell you WHEN to intervene. And that gap - between prediction and action - is where most churn prevention efforts fall apart.
+The classifier tells you WHO will churn. It doesn't tell you WHEN to intervene. And that gap between prediction and action is where most churn prevention efforts fall apart.
 
 For this portfolio project, I decided to finally solve that problem properly. Not just build another classifier, but build a complete system that answers the questions business teams actually need answered.
 
-Here's what I built - and what it taught me about the difference between predicting churn and preventing it.
+Here's what I built, and what it taught me about the difference between predicting churn and preventing it.
 
 ---
 
@@ -40,7 +40,7 @@ Because timing matters. A lot.
 
 Think about the last time you canceled a subscription.
 
-There was probably a moment - maybe a few weeks before you actually clicked "cancel" - when you were frustrated but still open to staying. If someone had reached out *then*, with the right message, you might have reconsidered.
+There was probably a moment, maybe a few weeks before you actually clicked "cancel," when you were frustrated but still open to staying. If someone had reached out *then*, with the right message, you might have reconsidered.
 
 But if they'd contacted you the day after you made up your mind? Too late. You'd already moved on mentally.
 
@@ -62,7 +62,7 @@ I needed a model that could predict *when* a customer would churn, not just *if*
 
 That's when I discovered survival analysis.
 
-If you haven't encountered it before, survival analysis is a statistical technique originally developed for medical research - predicting how long patients would survive after treatment. But it turns out to be perfect for churn prediction too.
+If you haven't encountered it before, survival analysis is a statistical technique originally developed for medical research to predict how long patients would survive after treatment. It turns out to be perfect for churn prediction too.
 
 Instead of asking "will this customer churn?" (binary classification), survival analysis asks "how long until this customer churns?" (time-to-event modeling).
 
@@ -72,7 +72,7 @@ I implemented a Cox Proportional Hazards model alongside my classification model
 
 Look at that curve. Churn doesn't happen all at once. It's gradual. 8% by day 30. 13% by day 60. 21% by day 120. 
 
-There's a pattern here - a rhythm to how customers leave. And that pattern was completely invisible to my classification model.
+There's a pattern here, a rhythm to how customers leave. And that pattern was completely invisible to my classification model.
 
 ---
 
@@ -97,7 +97,7 @@ After day 95? Too late. More than half have already churned.
 
 ![Intervention Window](viz/06_intervention_timing.png)
 
-This wasn't a number I pulled from a blog post or industry benchmark. It came directly from my survival model's predictions for *these specific customers*. That's the power of this approach - the window adapts to your actual customer behavior.
+This wasn't a number I pulled from a blog post or industry benchmark. It came directly from my survival model's predictions for *these specific customers*. That's the power of this approach: the window adapts to your actual customer behavior.
 
 ---
 
@@ -126,7 +126,7 @@ The results surprised me.
 
 **Call crushed it.** 54.4% reduction in churn. Statistically significant at p < 0.0001.
 
-Personal phone outreach - the most expensive, most labor-intensive option - was by far the most effective.
+Personal phone outreach, the most expensive and labor-intensive option, was by far the most effective.
 
 But wait. Before you conclude "just call everyone," there's a twist.
 
@@ -170,7 +170,7 @@ I could have spent weeks pushing my AUC from 0.66 to 0.75. But that wouldn't hav
 
 **2. Model metrics are gates, not goals.**
 
-An AUC of 0.66 sounds mediocre. But my model's job was to *rank* customers by risk, not to achieve perfect classification. 0.66 was good enough for that. The real validation came from the A/B test - did acting on predictions actually improve retention?
+An AUC of 0.66 sounds mediocre. But my model's job was to *rank* customers by risk, not to achieve perfect classification. 0.66 was good enough for that. The real validation came from the A/B test: did acting on predictions actually improve retention?
 
 **3. Statistical rigor protects you from yourself.**
 
@@ -178,7 +178,7 @@ With 4 treatment variants, I was running 4 hypothesis tests. Without Bonferroni 
 
 **4. The best predictor isn't always the best target.**
 
-My strongest predictive feature was tenure - how long the customer had been with us. But you can't change someone's tenure. The *actionable* features - engagement score, feature usage - had smaller coefficients but higher intervention value.
+My strongest predictive feature was tenure, how long the customer had been with us. But you can't change someone's tenure. The *actionable* features like engagement score and feature usage had smaller coefficients but higher intervention value.
 
 ![Feature Importance vs Actionability](viz/04_feature_importance_comparison.png)
 
@@ -220,4 +220,4 @@ That's what applied machine learning looks like to me.
 
 ---
 
-*The complete implementation - all code, models, and visualizations - is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, and Google ADK.*

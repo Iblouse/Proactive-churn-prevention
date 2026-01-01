@@ -4,13 +4,13 @@
 
 ---
 
-I've built churn models for over a decade now. Different industries, different scales, different algorithms. The technical part is straightforward - train a classifier, optimize the threshold, validate on held-out data.
+I've built churn models for over a decade now. Different industries, different scales, different algorithms. The technical part is straightforward: train a classifier, optimize the threshold, validate on held-out data.
 
 But here's what I've noticed: the model is rarely the problem.
 
 The problem is that classification models answer the wrong question. They tell you WHO will churn. They don't tell you WHEN to intervene. And that gap between prediction and action is where most retention efforts fall apart.
 
-For this portfolio project, I wanted to demonstrate what a complete solution looks like - one that bridges that gap with survival analysis, A/B testing, and ROI modeling.
+For this portfolio project, I wanted to demonstrate what a complete solution looks like: one that bridges that gap with survival analysis, A/B testing, and ROI modeling.
 
 Here's the approach, and what it reinforces about applied ML.
 
@@ -22,7 +22,7 @@ Let me show you what I mean.
 
 ![Risk Distribution](viz/01_risk_distribution.png)
 
-I created a synthetic dataset of 6,000 customers for this portfolio project. After running my classifier, I had 2,825 customers flagged as "high risk" - nearly half the customer base. Each one represents about $1,931 in lifetime value. That's **$2.54 million** sitting in a spreadsheet labeled "probably going to leave."
+I created a synthetic dataset of 6,000 customers for this portfolio project. After running my classifier, I had 2,825 customers flagged as "high risk," nearly half the customer base. Each one represents about $1,931 in lifetime value. That's **$2.54 million** sitting in a spreadsheet labeled "probably going to leave."
 
 Now imagine you're the Customer Success lead. What do you do with this list?
 
@@ -36,7 +36,7 @@ But here's the deeper problem: **when do you reach out?**
 
 Think about the last subscription you canceled.
 
-There was probably a period - maybe a few weeks before you clicked "cancel" - when you were frustrated but still persuadable. If someone had reached out then, with the right message, you might have stayed.
+There was probably a period, maybe a few weeks before you clicked "cancel," when you were frustrated but still persuadable. If someone had reached out then, with the right message, you might have stayed.
 
 But if they'd contacted you the day after you'd made up your mind? Too late. You'd already mentally moved on.
 
@@ -62,7 +62,7 @@ These are fundamentally different questions, and they require different models.
 
 ### What is Survival Analysis?
 
-Survival analysis is a statistical technique originally developed for medical research - predicting how long patients survive after treatment. But it applies beautifully to any "time-to-event" problem: customer churn, employee attrition, equipment failure.
+Survival analysis is a statistical technique originally developed for medical research to predict how long patients survive after treatment. It applies beautifully to any "time-to-event" problem: customer churn, employee attrition, equipment failure.
 
 The Cox Proportional Hazards model I implemented gives us:
 - **Survival curves**: Probability of "surviving" (not churning) over time
@@ -73,12 +73,12 @@ The Cox Proportional Hazards model I implemented gives us:
 
 ![Survival Curves](viz/02_survival_curves.png)
 
-Look at that curve. Churn isn't a sudden event - it's gradual:
+Look at that curve. Churn isn't a sudden event. It's gradual:
 - 8% churned by day 30
 - 13% by day 60
 - 21% by day 120
 
-There's a rhythm to customer departure. A pattern that unfolds over months. My classification model treated all churners the same - it couldn't see this temporal structure.
+There's a rhythm to customer departure. A pattern that unfolds over months. My classification model treated all churners the same and couldn't see this temporal structure.
 
 ### Finding the Optimal Window
 
@@ -98,7 +98,7 @@ From this distribution, I derived the intervention window:
 
 ![Intervention Window](viz/06_intervention_timing.png)
 
-**This window came from the data, not from intuition or industry benchmarks.** That's the power of survival analysis - the timing adapts to your specific customer behavior.
+**This window came from the data, not from intuition or industry benchmarks.** That's the power of survival analysis: the timing adapts to your specific customer behavior.
 
 ---
 
@@ -191,7 +191,7 @@ This creates a strategic question: Do you maximize impact (Call) or efficiency (
 
 ### The Tiered Solution
 
-The answer is neither - you build a tiered system:
+The answer is neither. You build a tiered system:
 
 | Customer Segment | Recommended Action | Why |
 |-----------------|-------------------|-----|
@@ -208,7 +208,7 @@ This is the kind of nuanced recommendation that a single "best model" can't prov
 
 One more lesson worth sharing.
 
-My strongest predictive feature was `tenure_months` - how long the customer had been with us. Strong negative coefficient; newer customers churn more.
+My strongest predictive feature was `tenure_months`, how long the customer had been with us. Strong negative coefficient; newer customers churn more.
 
 But here's the problem: **you can't change someone's tenure.**
 
@@ -218,7 +218,7 @@ I built a framework scoring features on both dimensions:
 
 ![Feature Importance vs Actionability](viz/04_feature_importance_comparison.png)
 
-When I factored in actionability, the rankings changed completely. `engagement_score` jumped to #1 - not because it's the best predictor, but because it combines decent predictive power with high actionability. We can actually influence engagement through product tours, feature education, targeted content.
+When I factored in actionability, the rankings changed completely. `engagement_score` jumped to #1, not because it's the best predictor, but because it combines decent predictive power with high actionability. We can actually influence engagement through product tours, feature education, targeted content.
 
 This is the gap between academic ML and applied ML. In a Kaggle competition, you optimize for prediction accuracy. In the real world, you need features you can actually do something about.
 
@@ -232,7 +232,7 @@ Building this system reinforced several principles I've come to value over my ca
 
 ### 1. Model metrics are gates, not goals
 
-The AUC was 0.66. "Mediocre" by competition standards. But the model's job was to *rank* customers by risk, and 0.66 does that fine. The real validation came from the A/B test - did acting on predictions actually improve retention?
+The AUC was 0.66. "Mediocre" by competition standards. But the model's job was to *rank* customers by risk, and 0.66 does that fine. The real validation came from the A/B test: did acting on predictions actually improve retention?
 
 I stopped optimizing when the model was "good enough" and focused on the questions that actually mattered.
 
@@ -244,7 +244,7 @@ Those questions delivered more value than any hyperparameter tuning ever would.
 
 ### 3. Statistical rigor protects you from yourself
 
-Bonferroni correction prevented me from declaring Email "significant" when it wasn't. Proper methodology isn't bureaucratic overhead - it's protection against false confidence.
+Bonferroni correction prevented me from declaring Email "significant" when it wasn't. Proper methodology isn't bureaucratic overhead. It's protection against false confidence.
 
 ### 4. Systems beat models
 
@@ -287,7 +287,7 @@ Prevention requires answering questions that classification models weren't desig
 - Is it worth the cost?
 - Which features can we actually influence?
 
-Those questions require more than a good model. They require a complete system - and the experience to know which questions to ask in the first place.
+Those questions require more than a good model. They require a complete system and the experience to know which questions to ask in the first place.
 
 The model's AUC was 0.66. The system protected $264K.
 
@@ -295,4 +295,4 @@ That's the difference between building models and solving problems.
 
 ---
 
-*The complete implementation - all code, models, and visualizations - is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines (survival analysis), and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines (survival analysis), and Google ADK.*

@@ -14,7 +14,7 @@ Then the business team asks: "Great, but when should we actually call them?"
 
 And the model has no answer. It was never designed to.
 
-For this portfolio project, I wanted to demonstrate what a complete solution looks like - one that answers not just WHO will churn, but WHEN to intervene, WHAT channel works, and WHETHER it's worth the cost.
+For this portfolio project, I wanted to demonstrate what a complete solution looks like: one that answers not just WHO will churn, but WHEN to intervene, WHAT channel works, and WHETHER it's worth the cost.
 
 ---
 
@@ -50,7 +50,7 @@ EXPERIMENT_SEED = 11
 
 ## Part 1: The Classification Model (WHO)
 
-Let's start with the standard approach - a churn classifier.
+Let's start with the standard approach, a churn classifier.
 
 ```python
 def train_churn_model(X_train, y_train):
@@ -100,7 +100,7 @@ for thresh in [0.3, 0.4, 0.5, 0.6, 0.7]:
 | **0.5** | **29.3%** | **66.3%** | **0.406** |
 | 0.6 | 34.5% | 35.3% | 0.349 |
 
-I chose 0.5 - best F1, reasonable recall. Missing churners (false negatives) is expensive, so I wanted to keep recall decent.
+I chose 0.5 for the best F1 and reasonable recall. Missing churners (false negatives) is expensive, so I wanted to keep recall decent.
 
 ![Threshold Analysis](viz/03_threshold_analysis.png)
 
@@ -130,13 +130,13 @@ print(f"Concordance Index: {survival_model.concordance_index_:.4f}")
 Concordance Index: 0.6645
 ```
 
-The concordance index is like AUC for survival models - it measures how well the model ranks event times. 0.66 means our model correctly orders 66% of customer pairs by their churn timing.
+The concordance index is like AUC for survival models. It measures how well the model ranks event times. 0.66 means our model correctly orders 66% of customer pairs by their churn timing.
 
 ### What the Survival Model Reveals
 
 ![Survival Curves](viz/02_survival_curves.png)
 
-Look at that curve. Churn isn't a sudden event - it's gradual:
+Look at that curve. Churn isn't a sudden event. It's gradual:
 - 8% by day 30
 - 13% by day 60
 - 21% by day 120
@@ -257,7 +257,7 @@ This creates a strategic decision:
 - **Maximize impact?** Use Call (54.4% lift)
 - **Maximize efficiency?** Use Email (158.8x ROI)
 
-The answer is neither - it's **tiered intervention**:
+The answer is neither. It's **tiered intervention**:
 - High-value customers → Call (the impact justifies the cost)
 - Standard customers → Email (efficiency at scale)
 
@@ -267,7 +267,7 @@ The answer is neither - it's **tiered intervention**:
 
 One more insight worth sharing.
 
-My top predictive feature was `tenure_months` - how long the customer has been with us. Strong negative coefficient; newer customers churn more.
+My top predictive feature was `tenure_months`, how long the customer has been with us. Strong negative coefficient; newer customers churn more.
 
 But you can't change someone's tenure. It's useful for prediction, useless for intervention.
 
@@ -303,7 +303,7 @@ This is the kind of thinking that Kaggle competitions don't teach, but real-worl
 - Revenue Protected: ~$264K
 
 **Key Lessons**:
-1. AUC 0.66 was "good enough" - the bottleneck was elsewhere
+1. AUC 0.66 was "good enough" because the bottleneck was elsewhere
 2. Survival analysis reveals timing patterns invisible to classification
 3. Bonferroni correction prevented a false positive (Email)
 4. ROI analysis changed the optimal strategy

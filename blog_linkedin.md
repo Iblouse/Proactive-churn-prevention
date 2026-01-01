@@ -17,7 +17,7 @@ Most churn models can't answer that. They tell you WHO will leave, not WHEN to i
 For this portfolio project, I decided to solve both problems properly.
 
 **The insight:**
-I added survival analysis (Cox Proportional Hazards) to predict timing, not just probability. It revealed something fascinating - there's a specific window where intervention works best.
+I added survival analysis (Cox Proportional Hazards) to predict timing, not just probability. It revealed something fascinating: there's a specific window where intervention works best.
 
 Day 45-95. Derived from the data, not assumed.
 
@@ -81,7 +81,7 @@ Classification models don't answer any of these.
 
 So I built a system that does:
 
-**For timing:** Added survival analysis. Discovered the optimal window is Day 45-95 - derived from data, not industry benchmarks.
+**For timing:** Added survival analysis. Discovered the optimal window is Day 45-95, derived from data, not industry benchmarks.
 
 **For channels:** Ran an A/B test. Call reduced churn by 54.4%. But Email had 158.8x ROI (24x better than Call).
 
@@ -142,7 +142,7 @@ The most interesting finding?
 Call had the best results (54.4% lift).
 Email had the best ROI (158.8x).
 
-They're both "right" - for different customers.
+They're both "right" for different customers.
 
 That's the kind of nuance that gets lost when we reduce everything to a single accuracy metric.
 
