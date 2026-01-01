@@ -209,15 +209,7 @@ Different seeds can produce different winners. This reflects realistic uncertain
 ```      
 
 ### Data Flow
-[Flowchart](https://github.com/Iblouse/Proactive-churn-prevention/blob/main/flowchart.md)
-```
-Customer Data → Feature Engineering → Churn Model → Survival Analysis → Agent Processing → A/B Test → Tools → Local Test → Dashboard
-     │                │                   │               │                    │              │            │           │
-     ▼                ▼                   ▼               ▼                    ▼              ▼            ▼           ▼
-  6,000           15 features         Probability      Days Until         Risk-Based     Validate     Validate    Executive
- Customers       + Actionability      + Risk Tier       Churn             Routing        Tools        Channels    Reporting
-                   Scoring            AUC: 0.6612    Window: 45-95     Channel Select              Winner: Call
-```
+[See Flowchart](https://github.com/Iblouse/Proactive-churn-prevention/blob/main/flowchart.md)
 
 ---
 
