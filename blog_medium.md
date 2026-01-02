@@ -1,20 +1,18 @@
-# The Question Most Churn Models Cannot Answer
+# Why Most Churn Models Solve the Wrong Problem (And How to Fix It)
 
-*After a decade in ML, I have learned that the best models often solve the wrong problem.*
+*Lessons from a decade of building ML systems that actually get used*
 
 ---
 
-I have built dozens of churn models over the years. Different industries, different scales, different tech stacks. The pattern is always the same: train a classifier, optimize the threshold, hand over a ranked list of at-risk customers.
+I have built churn models for over a decade now. Different industries, different scales, different algorithms. The technical part is straightforward: train a classifier, optimize the threshold, validate on held-out data.
 
-And every single time, the business teams ask the same question: **"Great, but when should we actually reach out?"**
+But here is what I have noticed: the model is rarely the problem.
 
-For years, I did not have a good answer.
+The problem is that classification models answer the wrong question. They tell you WHO will churn. They do not tell you WHEN to intervene. And that gap between prediction and action is where most retention efforts fall apart.
 
-The classifier tells you WHO will churn. It does not tell you WHEN to intervene. And that gap between prediction and action is where most churn prevention efforts fall apart.
+For this portfolio project, I wanted to demonstrate what a complete solution looks like: one that bridges that gap with survival analysis, A/B testing, and ROI modeling.
 
-For this portfolio project, I decided to finally solve that problem properly. Not just build another classifier, but build a complete system that answers the questions business teams actually need answered.
-
-Here is what I built, and what it taught me about the difference between predicting churn and preventing it.
+Here is the approach, and what it reinforces about applied ML.
 
 ---
 
@@ -220,4 +218,4 @@ That is what applied machine learning looks like to me.
 
 ---
 
-*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, Vertex AI and Google ADK.*
