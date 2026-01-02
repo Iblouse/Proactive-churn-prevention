@@ -490,7 +490,7 @@ churn-prevention-agents/
 ├── portfolio.md              # Technical blog post
 ├── flowchart.md                    # Architecture diagrams
 ├── requirements.txt                     # Dependencies
-├── Charts/                     # Codes for charts not in the notebook
+├── Codes for Charts/                     # Codes for charts not in the notebook
 ├── viz/
 │   ├── 01_risk_distribution.png
 │   ├── 02_intervention_window.png
