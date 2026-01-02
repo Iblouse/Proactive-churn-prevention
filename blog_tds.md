@@ -295,4 +295,4 @@ That is the difference between building models and solving problems.
 
 ---
 
-*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines (survival analysis), and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the [GitHub repository](https://github.com/Iblouse/Proactive-churn-prevention). It is built with Python, scikit-learn, lifelines (Survival Analysis), Vertex AI, and Google ADK.*
