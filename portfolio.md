@@ -251,7 +251,7 @@ A model in a notebook does not save customers. The value comes from:
 | **Intervention** | Selects channel based on A/B test results, determines timing |
 | **Evaluation** | Tracks outcomes, measures effectiveness, closes feedback loop |
 
-> **Implementation Note**: A/B testing runs *before* agent construction. This ensures `recommend_intervention` uses statistically validated channel data, not assumed effectiveness.
+> **Implementation Note**: A/B testing runs *before* agent construction. This ensures `recommend_intervention` uses statistically validated channel data, not assumed effectiveness. [See Flowchart](https://github.com/Iblouse/Proactive-churn-prevention/blob/main/flowchart.md).
 
 ---
 
