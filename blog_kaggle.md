@@ -8,7 +8,7 @@
 
 After a decade of building ML systems, I have noticed something about churn projects.
 
-We spend weeks optimizing classifiers. We celebrate AUC improvements. We hand over ranked lists of at-risk customers.
+People spend weeks optimizing classifiers, celebrating AUC improvements, and handing over ranked lists of at‑risk customers.
 
 Then the business team asks: "Great, but when should we actually call them?"
 
