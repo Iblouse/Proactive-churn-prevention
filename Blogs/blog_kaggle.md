@@ -6,7 +6,7 @@
 
 ## The Pattern I Keep Seeing
 
-After years of building ML systems, I've noticed something about churn projects.
+After a decade of building ML systems, I have noticed something about churn projects.
 
 We spend weeks optimizing classifiers. We celebrate AUC improvements. We hand over ranked lists of at-risk customers.
 
@@ -14,11 +14,11 @@ Then the business team asks: "Great, but when should we actually call them?"
 
 And the model has no answer. It was never designed to.
 
-For this portfolio project, I wanted to demonstrate what a complete solution looks like: one that answers not just WHO will churn, but WHEN to intervene, WHAT channel works, and WHETHER it's worth the cost.
+For this portfolio project, I wanted to demonstrate what a complete solution looks like: one that answers not just WHO will churn, but WHEN to intervene, WHAT channel works, and WHETHER it is worth the cost.
 
 ---
 
-## What We're Building
+## What We are Building
 
 A complete churn prevention system that answers four questions:
 
@@ -50,7 +50,7 @@ EXPERIMENT_SEED = 11
 
 ## Part 1: The Classification Model (WHO)
 
-Let's start with the standard approach, a churn classifier.
+Let us start with the standard approach, a churn classifier.
 
 ```python
 def train_churn_model(X_train, y_train):
@@ -74,13 +74,13 @@ AUC-ROC: 0.6612
 
 ### Why I Stopped Here
 
-0.66 isn't impressive. I could probably push it to 0.72 or 0.75 with gradient boosting and hyperparameter tuning.
+0.66 is not impressive. I could probably push it to 0.72 or 0.75 with gradient boosting and hyperparameter tuning.
 
-But I didn't.
+But I did not.
 
-Here's why: the model's job is to **rank** customers by risk. Can it reliably tell me that customer A is higher risk than customer B? At 0.66, yes. The ranking is meaningful, even if the exact probabilities aren't perfectly calibrated.
+Here is why: the model's job is to **rank** customers by risk. Can it reliably tell me that customer A is higher risk than customer B? At 0.66, yes. The ranking is meaningful, even if the exact probabilities are not perfectly calibrated.
 
-The bottleneck in this project isn't prediction accuracy. It's knowing what to *do* with the predictions.
+The bottleneck in this project is not prediction accuracy. It is knowing what to *do* with the predictions.
 
 So I moved on.
 
@@ -136,16 +136,16 @@ The concordance index is like AUC for survival models. It measures how well the 
 
 ![Survival Curves](viz/02_survival_curves.png)
 
-Look at that curve. Churn isn't a sudden event. It's gradual:
+Look at that curve. Churn is not a sudden event. It is gradual:
 - 8% by day 30
 - 13% by day 60
 - 21% by day 120
 
-There's a *rhythm* to customer departure. A classification model treats Day 1 churners the same as Day 100 churners. Survival analysis captures the temporal pattern.
+There is a *rhythm* to customer departure. A classification model treats Day 1 churners the same as Day 100 churners. Survival analysis captures the temporal pattern.
 
 ### Deriving the Intervention Window
 
-Here's the key insight. I filtered to high-risk customers (probability >= 50%) and looked at their predicted days until churn:
+Here is the key insight. I filtered to high-risk customers (probability >= 50%) and looked at their predicted days until churn:
 
 ```python
 high_risk = df[df['churn_probability'] >= 0.5]
@@ -165,13 +165,13 @@ Median: 95
 The clustering is tight. Most high-risk customers are predicted to churn around day 91-97.
 
 From this, I derived the intervention window:
-- **Before Day 45**: Too early. Customer hasn't hit their frustration point.
-- **Day 45-95**: Optimal. Customer is experiencing friction but hasn't decided.
+- **Before Day 45**: Too early. Customer has not hit their frustration point.
+- **Day 45-95**: Optimal. Customer is experiencing friction but has not decided.
 - **After Day 95**: Too late. More than half have already churned.
 
 ![Intervention Window](viz/06_intervention_timing.png)
 
-This window isn't a guess or an industry benchmark. It's derived directly from this dataset's survival predictions.
+This window is not a guess or an industry benchmark. It is derived directly from this dataset's survival predictions.
 
 ---
 
@@ -206,7 +206,7 @@ class ABTestManager:
 
 **Why Bonferroni Correction?**
 
-I'm testing 4 treatments against control. Without correction, I'd expect ~0.2 false positives by chance (4 × 0.05).
+I am testing 4 treatments against control. Without correction, I'd expect ~0.2 false positives by chance (4 × 0.05).
 
 Bonferroni adjusts the significance threshold: 0.05 / 4 = 0.0125
 
@@ -257,7 +257,7 @@ This creates a strategic decision:
 - **Maximize impact?** Use Call (54.4% lift)
 - **Maximize efficiency?** Use Email (158.8x ROI)
 
-The answer is neither. It's **tiered intervention**:
+The answer is neither. It is **tiered intervention**:
 - High-value customers → Call (the impact justifies the cost)
 - Standard customers → Email (efficiency at scale)
 
@@ -269,7 +269,7 @@ One more insight worth sharing.
 
 My top predictive feature was `tenure_months`, how long the customer has been with us. Strong negative coefficient; newer customers churn more.
 
-But you can't change someone's tenure. It's useful for prediction, useless for intervention.
+But you cannot change someone's tenure. It is useful for prediction, useless for intervention.
 
 I built a framework scoring features on both importance AND actionability:
 
@@ -282,7 +282,7 @@ combined_score = abs(coefficient) * actionability_multiplier
 
 The rankings change completely. `engagement_score` becomes the #1 target because it combines decent predictive power with high actionability.
 
-This is the kind of thinking that Kaggle competitions don't teach, but real-world ML requires.
+This is the kind of thinking that Kaggle competitions do not teach, but real-world ML requires.
 
 ---
 
@@ -313,7 +313,7 @@ This is the kind of thinking that Kaggle competitions don't teach, but real-worl
 
 ## Final Thought
 
-After years of building these systems, I've learned that the model is rarely the bottleneck.
+After years of building these systems, I have learned that the model is rarely the bottleneck.
 
 The bottleneck is asking the right questions:
 - When should we act?
@@ -322,7 +322,7 @@ The bottleneck is asking the right questions:
 
 A "mediocre" model embedded in a thoughtful system protected ~$264K in simulated revenue.
 
-That's the difference between building models and solving problems.
+That is the difference between building models and solving problems.
 
 ---
 

@@ -1,6 +1,6 @@
-# The Question Most Churn Models Can't Answer
+# The Question Most Churn Models Cannot Answer
 
-*After years in ML, I have learned that the best models often solve the wrong problem.*
+*After a decade in ML, I have learned that the best models often solve the wrong problem.*
 
 ---
 
@@ -8,9 +8,9 @@ I have built dozens of churn models over the years. Different industries, differ
 
 And every single time, the business teams ask the same question: **"Great, but when should we actually reach out?"**
 
-For years, I didn't have a good answer.
+For years, I did not have a good answer.
 
-The classifier tells you WHO will churn. It doesn't tell you WHEN to intervene. And that gap between prediction and action is where most churn prevention efforts fall apart.
+The classifier tells you WHO will churn. It does not tell you WHEN to intervene. And that gap between prediction and action is where most churn prevention efforts fall apart.
 
 For this portfolio project, I decided to finally solve that problem properly. Not just build another classifier, but build a complete system that answers the questions business teams actually need answered.
 
@@ -22,13 +22,13 @@ Here is what I built, and what it taught me about the difference between predict
 
 Let me paint you a picture.
 
-You are a Customer Success manager. Your data science team hands you a list of 2,825 customers flagged as "high risk." Nearly half your customer base. Each one represents about $1,931 in lifetime value. That's $2.54 million sitting in a spreadsheet, waiting to walk out the door.
+You are a Customer Success manager. Your data science team hands you a list of 2,825 customers flagged as "high risk." Nearly half your customer base. Each one represents about $1,931 in lifetime value. That is $2.54 million sitting in a spreadsheet, waiting to walk out the door.
 
 ![Risk Distribution](viz/01_risk_distribution.png)
 
 Now what?
 
-Do you call all 2,825 of them? You don't have the bandwidth. Do you email them all? That feels impersonal for your VIP accounts. Do you offer discounts? That eats into margins.
+Do you call all 2,825 of them? You do not have the bandwidth. Do you email them all? That feels impersonal for your VIP accounts. Do you offer discounts? That eats into margins.
 
 But here is the real question nobody's asking: **When do you reach out?**
 
@@ -42,15 +42,15 @@ Think about the last time you canceled a subscription.
 
 There was probably a moment, maybe a few weeks before you actually clicked "cancel," when you were frustrated but still open to staying. If someone had reached out *then*, with the right message, you might have reconsidered.
 
-But if they had contacted you the day after you made up your mind? Too late. You'd already moved on mentally.
+But if they'd contacted you the day after you made up your mind? Too late. You'd already moved on mentally.
 
-That's the timing trap in churn prevention:
+That is the timing trap in churn prevention:
 
-- **Too early**: The customer has not experienced friction yet. Your "we miss you" email feels weird because they haven't gone anywhere.
+- **Too early**: The customer has not experienced friction yet. Your "we miss you" email feels weird because they have not gone anywhere.
 - **Too late**: They have already decided to leave. Your discount offer feels desperate.
-- **Just right**: They are frustrated, considering options, but haven't committed. This is your window.
+- **Just right**: They are frustrated, considering options, but have not committed. This is your window.
 
-The problem is, most churn models don't tell you when that window opens or closes. They just give you a probability score and wish you luck.
+The problem is, most churn models do not tell you when that window opens or closes. They just give you a probability score and wish you luck.
 
 I wanted to do better.
 
@@ -60,9 +60,9 @@ I wanted to do better.
 
 I needed a model that could predict *when* a customer would churn, not just *if*.
 
-That's when I discovered survival analysis.
+That is when I discovered survival analysis.
 
-If you haven't encountered it before, survival analysis is a statistical technique originally developed for medical research to predict how long patients would survive after treatment. It turns out to be perfect for churn prediction too.
+If you have not encountered it before, survival analysis is a statistical technique originally developed for medical research to predict how long patients would survive after treatment. It turns out to be perfect for churn prediction too.
 
 Instead of asking "will this customer churn?" (binary classification), survival analysis asks "how long until this customer churns?" (time-to-event modeling).
 
@@ -70,7 +70,7 @@ I implemented a Cox Proportional Hazards model alongside my classification model
 
 ![Survival Curves](viz/02_survival_curves.png)
 
-Look at that curve. Churn doesn't happen all at once. It's gradual. 8% by day 30. 13% by day 60. 21% by day 120. 
+Look at that curve. Churn does not happen all at once. It is gradual. 8% by day 30. 13% by day 60. 21% by day 120. 
 
 There is a pattern here, a rhythm to how customers leave. And that pattern was completely invisible to my classification model.
 
@@ -80,24 +80,24 @@ There is a pattern here, a rhythm to how customers leave. And that pattern was c
 
 Here is where it gets interesting.
 
-I took my 2,825 high-risk customers and asked the survival model: "For each of these people, when do you predict they'll churn?"
+I took my 2,825 high-risk customers and asked the survival model: "For each of these people, when do you predict they will churn?"
 
 The answers clustered tightly:
 - 25% would churn by day 91
 - 50% by day 95
 - 75% by day 97
 
-That tight clustering told me something important: **there's a specific window where intervention matters most.**
+That tight clustering told me something important: **there is a specific window where intervention matters most.**
 
-Before day 45? Too early. The customer hasn't hit their frustration point yet.
+Before day 45? Too early. The customer has not hit their frustration point yet.
 
 After day 95? Too late. More than half have already churned.
 
-**Day 45 to 95? That's the sweet spot.**
+**Day 45 to 95? That is the sweet spot.**
 
 ![Intervention Window](viz/06_intervention_timing.png)
 
-This wasn't a number I pulled from a blog post or industry benchmark. It came directly from my survival model's predictions for *these specific customers*. That's the power of this approach: the window adapts to your actual customer behavior.
+This was not a number I pulled from a blog post or industry benchmark. It came directly from my survival model's predictions for *these specific customers*. That is the power of this approach: the window adapts to your actual customer behavior.
 
 ---
 
@@ -128,7 +128,7 @@ The results surprised me.
 
 Personal phone outreach, the most expensive and labor-intensive option, was by far the most effective.
 
-But wait. Before you conclude "just call everyone," there's a twist.
+But wait. Before you conclude "just call everyone," there is a twist.
 
 ---
 
@@ -143,7 +143,7 @@ When I calculated ROI, a different picture emerged:
 ![Lift vs ROI](viz/10_lift_vs_roi.png)
 
 - **Email**: 19% lift, but 158.8x ROI (because it costs almost nothing)
-- **Call**: 54% lift, but only 6.5x ROI (because it's expensive)
+- **Call**: 54% lift, but only 6.5x ROI (because it is expensive)
 
 Email's ROI was **24 times higher** than Call's.
 
@@ -154,19 +154,19 @@ The answer, I realized, is neither. **You build a tiered system.**
 - **Critical risk + high-value customers**: Call them. The CLV justifies the cost.
 - **High risk + standard value**: Maybe a discount to address price sensitivity.
 - **Medium risk**: Email campaign. Cast a wide net cheaply.
-- **Low risk**: Just monitor. The ROI doesn't justify any intervention.
+- **Low risk**: Just monitor. The ROI does not justify any intervention.
 
-This is the kind of nuanced thinking that a single "best model" can't give you. It requires combining prediction, timing, experimentation, and economics.
+This is the kind of nuanced thinking that a single "best model" cannot give you. It requires combining prediction, timing, experimentation, and economics.
 
 ---
 
 ## What This Project Reinforced
 
-Building this system reinforced several principles I've come to appreciate over my career:
+Building this system reinforced several principles I have come to appreciate over my career:
 
 **1. The question matters more than the model.**
 
-I could have spent weeks pushing my AUC from 0.66 to 0.75. But that wouldn't have answered the timing question. Sometimes the most valuable thing you can do is step back and ask: "Am I even solving the right problem?"
+I could have spent weeks pushing my AUC from 0.66 to 0.75. But that would not have answered the timing question. Sometimes the most valuable thing you can do is step back and ask: "Am I even solving the right problem?"
 
 **2. Model metrics are gates, not goals.**
 
@@ -174,15 +174,15 @@ An AUC of 0.66 sounds mediocre. But my model's job was to *rank* customers by ri
 
 **3. Statistical rigor protects you from yourself.**
 
-With 4 treatment variants, I was running 4 hypothesis tests. Without Bonferroni correction, I might have declared Email "statistically significant" when it wasn't (p = 0.033, but adjusted threshold was 0.0125). Proper methodology prevents false confidence.
+With 4 treatment variants, I was running 4 hypothesis tests. Without Bonferroni correction, I might have declared Email "statistically significant" when it was not (p = 0.033, but adjusted threshold was 0.0125). Proper methodology prevents false confidence.
 
-**4. The best predictor isn't always the best target.**
+**4. The best predictor is not always the best target.**
 
-My strongest predictive feature was tenure, how long the customer had been with us. But you can't change someone's tenure. The *actionable* features like engagement score and feature usage had smaller coefficients but higher intervention value.
+My strongest predictive feature was tenure, how long the customer had been with us. But you cannot change someone's tenure. The *actionable* features like engagement score and feature usage had smaller coefficients but higher intervention value.
 
 ![Feature Importance vs Actionability](viz/04_feature_importance_comparison.png)
 
-This "actionability gap" is something I've never seen addressed in a Kaggle competition, but it's crucial for real-world impact.
+This "actionability gap" is something I have never seen addressed in a Kaggle competition, but it is crucial for real-world impact.
 
 ---
 
@@ -197,7 +197,7 @@ In the end, I built a system that:
 - **Validates** which channels work (Call: +54.4%, Email: 158.8x ROI)
 - **Routes** the right intervention to the right customer at the right time
 
-The model's AUC is 0.66. That's fine.
+The model's AUC is 0.66. That is fine.
 
 What matters is:
 - The timing window came from data, not assumptions
@@ -208,16 +208,16 @@ What matters is:
 
 ## Final Thought
 
-Here is the thing about churn prediction that most tutorials don't tell you:
+Here is the thing about churn prediction that most tutorials do not tell you:
 
 **Predicting churn is easy. Preventing it is hard.**
 
-Prevention requires answering questions that classification models weren't designed for. When should we act? Which channel should we use? Is it even worth the cost?
+Prevention requires answering questions that classification models were not designed for. When should we act? Which channel should we use? Is it even worth the cost?
 
 This project was my attempt to build something that answers all of those questions. Not a model, but a system. Not a score, but a recommendation.
 
-That's what applied machine learning looks like to me.
+That is what applied machine learning looks like to me.
 
 ---
 
-*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, Google ADK and Vertex AI.*
+*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, and Google ADK.*
