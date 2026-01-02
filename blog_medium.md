@@ -1,10 +1,10 @@
 # The Question Most Churn Models Can't Answer
 
-*After a decade in ML, I've learned that the best models often solve the wrong problem.*
+*After years in ML, I have learned that the best models often solve the wrong problem.*
 
 ---
 
-I've built dozens of churn models over the years. Different industries, different scales, different tech stacks. The pattern is always the same: train a classifier, optimize the threshold, hand over a ranked list of at-risk customers.
+I have built dozens of churn models over the years. Different industries, different scales, different tech stacks. The pattern is always the same: train a classifier, optimize the threshold, hand over a ranked list of at-risk customers.
 
 And every single time, the business teams ask the same question: **"Great, but when should we actually reach out?"**
 
@@ -14,7 +14,7 @@ The classifier tells you WHO will churn. It doesn't tell you WHEN to intervene. 
 
 For this portfolio project, I decided to finally solve that problem properly. Not just build another classifier, but build a complete system that answers the questions business teams actually need answered.
 
-Here's what I built, and what it taught me about the difference between predicting churn and preventing it.
+Here is what I built, and what it taught me about the difference between predicting churn and preventing it.
 
 ---
 
@@ -22,7 +22,7 @@ Here's what I built, and what it taught me about the difference between predicti
 
 Let me paint you a picture.
 
-You're a Customer Success manager. Your data science team hands you a list of 2,825 customers flagged as "high risk." Nearly half your customer base. Each one represents about $1,931 in lifetime value. That's $2.54 million sitting in a spreadsheet, waiting to walk out the door.
+You are a Customer Success manager. Your data science team hands you a list of 2,825 customers flagged as "high risk." Nearly half your customer base. Each one represents about $1,931 in lifetime value. That's $2.54 million sitting in a spreadsheet, waiting to walk out the door.
 
 ![Risk Distribution](viz/01_risk_distribution.png)
 
@@ -30,7 +30,7 @@ Now what?
 
 Do you call all 2,825 of them? You don't have the bandwidth. Do you email them all? That feels impersonal for your VIP accounts. Do you offer discounts? That eats into margins.
 
-But here's the real question nobody's asking: **When do you reach out?**
+But here is the real question nobody's asking: **When do you reach out?**
 
 Because timing matters. A lot.
 
@@ -42,13 +42,13 @@ Think about the last time you canceled a subscription.
 
 There was probably a moment, maybe a few weeks before you actually clicked "cancel," when you were frustrated but still open to staying. If someone had reached out *then*, with the right message, you might have reconsidered.
 
-But if they'd contacted you the day after you made up your mind? Too late. You'd already moved on mentally.
+But if they had contacted you the day after you made up your mind? Too late. You'd already moved on mentally.
 
 That's the timing trap in churn prevention:
 
-- **Too early**: The customer hasn't experienced friction yet. Your "we miss you" email feels weird because they haven't gone anywhere.
-- **Too late**: They've already decided to leave. Your discount offer feels desperate.
-- **Just right**: They're frustrated, considering options, but haven't committed. This is your window.
+- **Too early**: The customer has not experienced friction yet. Your "we miss you" email feels weird because they haven't gone anywhere.
+- **Too late**: They have already decided to leave. Your discount offer feels desperate.
+- **Just right**: They are frustrated, considering options, but haven't committed. This is your window.
 
 The problem is, most churn models don't tell you when that window opens or closes. They just give you a probability score and wish you luck.
 
@@ -72,13 +72,13 @@ I implemented a Cox Proportional Hazards model alongside my classification model
 
 Look at that curve. Churn doesn't happen all at once. It's gradual. 8% by day 30. 13% by day 60. 21% by day 120. 
 
-There's a pattern here, a rhythm to how customers leave. And that pattern was completely invisible to my classification model.
+There is a pattern here, a rhythm to how customers leave. And that pattern was completely invisible to my classification model.
 
 ---
 
 ## The Aha Moment
 
-Here's where it gets interesting.
+Here is where it gets interesting.
 
 I took my 2,825 high-risk customers and asked the survival model: "For each of these people, when do you predict they'll churn?"
 
@@ -109,7 +109,7 @@ At this point, I had two models working together:
 
 But I still had a nagging question: **Do interventions actually reduce churn, or are we just bothering people?**
 
-There's only one way to find out. Run an experiment.
+There is only one way to find out. Run an experiment.
 
 I designed a 5-arm A/B test:
 - **Control**: No intervention (the baseline)
@@ -208,7 +208,7 @@ What matters is:
 
 ## Final Thought
 
-Here's the thing about churn prediction that most tutorials don't tell you:
+Here is the thing about churn prediction that most tutorials don't tell you:
 
 **Predicting churn is easy. Preventing it is hard.**
 
