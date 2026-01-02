@@ -218,4 +218,4 @@ That is what applied machine learning looks like to me.
 
 ---
 
-*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, Vertex AI and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the [GitHub repository](https://github.com/Iblouse/Proactive-churn-prevention). It is built with Python, scikit-learn, lifelines, Vertex AI, and Google ADK.*
