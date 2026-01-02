@@ -6,7 +6,7 @@
 
 ## The Pattern I Keep Seeing
 
-After a decade of building ML systems, I've noticed something about churn projects.
+After years of building ML systems, I've noticed something about churn projects.
 
 We spend weeks optimizing classifiers. We celebrate AUC improvements. We hand over ranked lists of at-risk customers.
 
