@@ -220,4 +220,4 @@ That's what applied machine learning looks like to me.
 
 ---
 
-*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, and Google ADK.*
+*The complete implementation, including all code, models, and visualizations, is available in the accompanying Jupyter notebook. Built with Python, scikit-learn, lifelines, Google ADK and Vertex AI.*
