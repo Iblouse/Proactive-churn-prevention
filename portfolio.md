@@ -406,4 +406,4 @@ This is what applied ML looks like: adequate models, rigorous experimentation, m
 
 ---
 
-*The complete implementation, including all code and visualizations, is available in the accompanying Jupyter notebook.*
+*The complete implementation, including all code and visualizations, is available in the accompanying [Jupyter notebook](https://github.com/Iblouse/Proactive-churn-prevention/blob/main/Proactive_Churn_Prevention.ipynb).*
